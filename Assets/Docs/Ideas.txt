@@ -1,0 +1,5 @@
+Awesome Ideas List
+----------------------------------------------
+-Level Theme: Inside a tomb, basement of an old lab, stone floors.
+-Whatever item is stolen, have that not visible on character.
+-Only have visibility of room you are in.

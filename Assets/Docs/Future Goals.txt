@@ -1,0 +1,11 @@
+Complete a few games with restrictions placed on one or more of the following;
+	Timeframe
+	Theme
+	Genre
+	Size
+
+After doing the above, we should developed some ideas on what processes work good, and what doesn't. By recognizing these things, we can try to minimize doing what doesn't work well, and maximize what does work well.
+
+Develop 'boilerplate' code. This will be classes that are used constantly, and are tedious to create.
+Develop custom libraries. These are different than boilerplate as they are not necessarily used as often, and they may be very niche, or specific. Such as a procedural terrain generator, or a voxel engine plugin.
+Develop Unity Editor tools. This ties into the previous two goals, but is different. This entails creating plugins/extensions to the Unity editor to provide specific functionality and customization. This could be a voxel model editor that can be used to create 3D voxel models from within Unity, or a Terrain plugin that dynamically generates procedural terrain for static maps, with the ability to adjust values on the fly.

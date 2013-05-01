@@ -1,0 +1,167 @@
+To-Do
+	Create intro 								[x]
+	Create ideas doc 							[x]
+	Create a concept section					[x]
+	Create an art section						[x]
+	Create Goals list 							[x]
+	Create MVP 									[x]
+	Layout/Design MPV							[x]
+	Git repository								[x]
+	Project Setup								[x]
+	Title										[x] - Tone's Adventure
+
+	Main Menu									[]
+		Title									[x]
+		Random Objective Message				[x]
+			Save 2 game variables to global		[]
+		Play button								[x]
+	Game Lose (Game Over)						[x]
+		Message									[x]
+		Restart button							[x]
+	Game Win (Credits)							[x]
+		Message									[x]
+		Restart button							[x]
+	Level										[]
+		Platforms								[]
+		Puzzles									[]
+			Button object 						[]
+
+	Player										[]
+		Camera follow							[x]
+		Movement								[x]
+		Attack									[]
+		Actions									[x]
+<<<<<<< HEAD
+		Death									[]
+=======
+		Death									[x]
+>>>>>>> 5802297069ea9c4281ddff4eb7992af9cb5e0932
+	Enemy										[]
+		Idle									[]
+		Attack									[]
+		Death									[]
+	Art assets									[]
+		Level Models							[]
+			Platforms							[]
+			Puzzles								[]
+		Player Textures							[]
+		Enemy Textures							[]
+	Sound assets								[]
+		SFX										[]
+			State SFX							[]
+				Player death sound				[]
+				Enemy death sound				[]
+			Ability SFX							[]
+				Player jump						[]
+			Environment							[]
+				Ambient							[]
+				Puzzle Tones (x5)				[]
+		BGM										[]
+			Menu music							[]
+			Game music							[]
+	Win Conditions								[]
+	Lose Conditions								[]
+	GUI 										[]
+		Life Bar 								[]
+
+Intro:
+	First we need to conceptualize what it is we want to create. We spent a few hours doing that Sunday night after LD. Once we have a good idea of what it is that we want to create, we need to create some base goals. These should be key things that need to be accomplished, such as create a design document, define MVP goals for the game, create MVP for the game, etc... These goals, and the MVP will be the basis for the design document. The design document will be added to constantly throughout the project, so it is not important that it ever become 100% complete, but it will always be more complete than the game, until the game is finished. After the goals are thought up and written down, the MVP refinement can happen, this is where a list of everything that makes up MVP resides. Each item in that list is further refined, down to the simplest form needed that we both fully understand. This does not mean that we need to write psuedo-code, as I think that wastes time, but flowcharts showing basic ideas, or UML diagrams showing tricky classes/objects or hierarchies are not a bad idea, but these aren't required either. It really depends on the complexity of the base game and the MVP. There will be a running list that houses every stray idea/feature we have. This will be in a seperate doc to prevent distraction, as this doc will be accessed often. These ideas will not be automatically discarded, nor added.
+	The decision process will be:
+
+	Is this feature MVP?
+		Yes: Put into MVP goals list, expand upon next time Design Doc is worked on.
+		No: Put into ideas list
+
+	The ideas list will not be gone through or even looked over until MVP is complete. The reason for this is to keep the project on track. When MVP is complete, we should have another session where we go over the ideas list, and create a new goals list, based on the time left. When considering time left, remember that polishing and major bug testing has not been completed yet, only MVP.
+
+	A to-do list can be set up at the top of this doc for quick reference when looking for guidance on 'What to do next'. This doc should/will be the go-to guide for the project. It will be an instruction manual of sorts (yet will not spell out every detail).
+
+Time Frame:
+	2 Weeks
+	4/29/13 - 5/12/13
+	Time goals
+		Complete MVP section of Design doc on day 1
+		Implement MVP items by end of week 1
+		Spend a day bugtesting, and another fixing said bugs.
+		Spend a day or two polishing.
+		Entire project complete in 2 week period.
+
+Goals:
+	Learn unity
+		Shawn wants to learn the basics how to use Unity be completing a game from scratch.
+		I want to continue learning the basics of Unity to have a better understanding of core functionality, without needing to reference the Script Reference several times throughout a work session.
+	Complete this game design document
+		Clear goals should be listed, so we always know what needs to be accomplished.
+	A thorough MVP section should be detailed
+		This section is the only thing that is worked on until it is complete. Everything else is secondary.
+		Spend 1 full dev day refining/expanding the MVP secion. Try to list every possible thing that is required to make the game a basic, playable game that would mostly fit the description provided in the Concept section.
+	Bugtesting
+		Spend at least 1 day, preferable a few, finding bugs in the game. This time will be at the end of the 2 Weeks, but early enough that time is left to fix critical bugs found. This time should not be devoted to developing at all, just bugtesting to find major flaws/bugs. Documentation on the bugs found is important, and should be kept. This time can also be used to discover non-bug flaws that will be fixed in the polishing section.
+	Polish
+		This part of the project should be at the end of the time frame. Minor optimizations, replacing placeholder models/textures, repositioning GUI elements, adjusting object locations due to clipping, correcting typo's, etc... The art/style section should be payed more attention to in this phase, as part of polishing the game is ensuring that players can be immersed. By ensuring the style/art matches our ideas of what the game is will help ensure that the players are immersed in 'our world'.
+
+Concept:
+	Create an Action-Platformer hybrid with a strong emphasis on puzzle play. The puzzles will generally be music/sound oriented. In fact, audio will be a core component of the game, even being used as attacks/actions the character can perform. The game will play like a 2D sidescrolling platformer, although the world will actually be 3D. The game will have static levels, in that it will not be a procedurally generated infinte runner. The characters will be 2D sprites, with other objects possibly being 2D sprites as well. (Billboarding may be used to prevent weird visuals at the edges of the screen)
+
+	Puzzles:
+		Combination puzzle. Playing musical keys in a certain combination (melody). Once the correct combination is played, an effect occurs (door opening, chandelier falling).
+
+	Objective/Story:
+		Player needs to obtain his (Insert random steampunk item) which was stolen by (Insert random steampunk villain), so you head to their labratory to find it.
+		When you find your item and defeat the villain, you exit out the back door. The camera then zooms out to show the whole level. (Player facepalms).
+
+	Level:
+		A steampunk villians labratory.
+
+Art/Style:
+	Stylewise, the characters and animations will be hand-drawn. They will have a generally cartoonish or anime feel to them. The game world will be very steampunk, and this will guide most of the art and style decisions to be made. Key ideas to think of with this theme are:
+		Rube Goldberg machines (complex machines that perform a simple task)
+		Gears, Cogs, Levers, Handcranks, Steam engines, Pipes, Brick, Overly designed environments
+		Monacles, Mustaches, Corsets, Khaki, Goggles, Backpacks, etc...
+	A general 'over-the-top' feel to everything. If ever a decision needs to be made about the style of something, go with the option that seems more pretentious, or overly thought out, as it will likely fit the theme better than a simple one. Just think Occum's Razor, in reverse.
+
+MVP:
+	Main Menu
+		Play button
+	Game Lose (Game Over)
+		Restart button
+	Game Win (Credits)
+		Restart button
+	Player
+		Camera follow
+		Movement
+		Attack
+		Actions
+		Death
+	Enemy
+		Idle
+		Attack
+		Death
+	Level
+		Platforms
+		Puzzles
+	Art assets
+		Level Models
+			Platforms
+			Puzzles
+		Player Textures
+		Enemy Textures
+	Sound assets
+		SFX
+			State SFX
+				Player death sound
+				Enemy death sound
+			Ability SFX
+				Player jump
+			Environment
+				Ambient
+				Puzzle Tones (x5)
+		BGM
+			Menu music
+			Game music
+	Win Conditions
+	Lose Conditions
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+	User Experience (UX)	This section is for changes and tweaks that don't fit elsewhere, but are required to make the game fun/playable.
+							An example would be; in an FPS locking the cursor to the center of the screen.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
