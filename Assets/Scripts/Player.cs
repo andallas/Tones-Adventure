@@ -40,11 +40,6 @@ public class Player : MonoBehaviour
 				jumpSpeed = 0.325f;
 			}
 		}
-		if(Input.GetButtonDown("Action"))
-		{
-			Debug.Log("Action Button Pressed");
-			DamagePlayer();
-		}
 	}
 
 	void OnGUI()
