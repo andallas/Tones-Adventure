@@ -24,18 +24,14 @@ To-Do
 	Level										[]
 		Platforms								[]
 		Puzzles									[]
-			Button object 						[]
+		Button object 							[]
 
 	Player										[]
 		Camera follow							[x]
 		Movement								[x]
 		Attack									[]
 		Actions									[x]
-<<<<<<< HEAD
-		Death									[]
-=======
 		Death									[x]
->>>>>>> 5802297069ea9c4281ddff4eb7992af9cb5e0932
 	Enemy										[]
 		Idle									[]
 		Attack									[]
@@ -53,6 +49,9 @@ To-Do
 				Enemy death sound				[]
 			Ability SFX							[]
 				Player jump						[]
+				Player attack 					[]
+				Enemy jump						[]
+				Enemy attack 					[]
 			Environment							[]
 				Ambient							[]
 				Puzzle Tones (x5)				[]
