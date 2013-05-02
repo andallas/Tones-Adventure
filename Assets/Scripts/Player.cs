@@ -20,19 +20,95 @@ public class Player : MonoBehaviour
 	private int colNum = 0;
 	private int total = 4;
 	private int animDur = 10;
+	//private float halfPlayerHeight = 1.980106f;
+	private float halfPlayerHeight;
+	private float halfPlayerWidth;
+	private int raycastDistance = 2;
 
 	void Start()
 	{
+		halfPlayerHeight = GetComponent<BoxCollider>().size.y / 2;
+		halfPlayerWidth = GetComponent<BoxCollider>().size.x / 2;
 		playerLifeTex = new Texture[]{(Texture)Resources.Load("Texture/gui/gear_life_empty"), (Texture)Resources.Load("Texture/gui/gear_life_full")};
 		jumpSpeed = baseJumpSpeed;
 	}
 
-	void FixedUpdate()
+	void Update()
 	{
-		float force = (Input.GetAxis("Horizontal") * speed * Time.deltaTime);
-		//rigidbody.AddForce(new Vector3(force,0,0));
-		//transform.Translate(force, 0, 0);
-		rigidbody.MovePosition(rigidbody.position + new Vector3(force,0,0));
+		RaycastHit hit;
+    if(Physics.Raycast(transform.position + new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
+    		//Debug.Log(hit.distance);
+    		grounded = (hit.distance <= halfPlayerHeight);
+    }
+    if(Physics.Raycast(transform.position - new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
+        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
+    }
+    if (Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
+        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
+    }
+
+    float distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+    bool allowMoveLeft = true;
+    bool allowMoveRight = true;
+
+    Debug.DrawRay(transform.position + new Vector3(-halfPlayerWidth,halfPlayerHeight,0), -Vector3.right * raycastDistance, Color.red);
+    Debug.DrawRay(transform.position + new Vector3(-halfPlayerWidth,0,0), -Vector3.right * raycastDistance, Color.red);
+  	Debug.DrawRay(transform.position + new Vector3(-halfPlayerWidth,-halfPlayerHeight + 0.25f,0), -Vector3.right * raycastDistance, Color.red);
+
+    if(Physics.Raycast(transform.position + new Vector3(-halfPlayerWidth,halfPlayerHeight,0), -Vector3.right * raycastDistance, out hit)) {
+    	//distanceMoved = (hit.distance <= Mathf.Abs(distanceMoved)) ? (hit.distance - 0.24f) * Input.GetAxis("Horizontal") : distanceMoved;
+    	allowMoveLeft = !(Mathf.Abs(distanceMoved) <= hit.distance + 0.25f);
+    }
+    if(Physics.Raycast(transform.position + new Vector3(-halfPlayerWidth,0,0), -Vector3.right * raycastDistance, out hit)) {
+      //distanceMoved = (hit.distance <= Mathf.Abs(distanceMoved)) ? (hit.distance - 0.24f) * Input.GetAxis("Horizontal") : distanceMoved;
+      allowMoveLeft = !(Mathf.Abs(distanceMoved) <= hit.distance + 0.25f);
+    }
+    if(Physics.Raycast(transform.position + new Vector3(-halfPlayerWidth,-halfPlayerHeight + 0.25f,0), -Vector3.right * raycastDistance, out hit)) {
+    	//distanceMoved = (hit.distance <= Mathf.Abs(distanceMoved)) ? (hit.distance - 0.24f) * Input.GetAxis("Horizontal") : distanceMoved;
+    	allowMoveLeft = !(Mathf.Abs(distanceMoved) <= hit.distance + 0.25f);
+    }
+
+    Debug.DrawRay(transform.position + new Vector3(halfPlayerWidth,halfPlayerHeight,0), Vector3.right * raycastDistance, Color.red);
+    Debug.DrawRay(transform.position + new Vector3(halfPlayerWidth,0,0), Vector3.right * raycastDistance, Color.red);
+  	Debug.DrawRay(transform.position + new Vector3(halfPlayerWidth,-halfPlayerHeight + 0.25f,0), Vector3.right * raycastDistance, Color.red);
+
+		if(Physics.Raycast(transform.position + new Vector3(halfPlayerWidth,halfPlayerHeight,0), Vector3.right * raycastDistance, out hit)) {
+			//distanceMoved = (hit.distance <= Mathf.Abs(distanceMoved)) ? (hit.distance - 0.24f) * Input.GetAxis("Horizontal") : distanceMoved;
+			allowMoveRight = !(Mathf.Abs(distanceMoved) <= hit.distance + 0.25f);
+    }
+    if(Physics.Raycast(transform.position + new Vector3(halfPlayerWidth,0,0), Vector3.right * raycastDistance, out hit)) {
+      //distanceMoved = (hit.distance <= Mathf.Abs(distanceMoved)) ? (hit.distance - 0.24f) * Input.GetAxis("Horizontal") : distanceMoved;
+      allowMoveRight = !(Mathf.Abs(distanceMoved) <= hit.distance + 0.25f);
+    }
+    if(Physics.Raycast(transform.position + new Vector3(halfPlayerWidth,-halfPlayerHeight + 0.25f,0), Vector3.right * raycastDistance, out hit)) {
+    	//distanceMoved = (hit.distance <= Mathf.Abs(distanceMoved)) ? (hit.distance - 0.24f) * Input.GetAxis("Horizontal") : distanceMoved;
+    	allowMoveRight = !(Mathf.Abs(distanceMoved) <= hit.distance + 0.25f);
+    }
+
+    //if(allowMove){
+    //	rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
+    //}
+    if(Input.GetAxis("Horizontal") == -1 && allowMoveLeft){
+    	rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
+  	} else
+  	if(Input.GetAxis("Horizontal") == 1 && allowMoveRight){
+  		rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
+  	}
+  	//rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
+
+
+  	/*if(rigidbody.position != distanceMoved){
+  		rigidbody.MovePosition(rigidbody.position + distanceMoved);
+  	} else {
+  		rigidbody.MovePosition(rigidbody.position - distanceMoved);
+  	}*/
+
+  	/*if(Input.GetAxis("Horizontal") == 1){
+  		
+  	} else
+  	if(Input.GetAxis("Horizontal") == -1){
+
+  	}*/
 
 		if(Input.GetButtonDown("Jump"))
 		{
@@ -91,7 +167,7 @@ public class Player : MonoBehaviour
 
 	void OnCollisionEnter(Collision collision)
 	{
-		if(!grounded)
+		/*if(!grounded)
 		{
 			foreach(ContactPoint contact in collision.contacts)
 			{
@@ -101,7 +177,7 @@ public class Player : MonoBehaviour
 				}
 				Debug.DrawRay(contact.point, contact.normal, Color.red);
 			}
-		}
+		}*/
 	}
 
 	void SetSpriteAnimation(int colCount, int rowCount, int colNumber, int rowNumber, int totalCells, int duration)
