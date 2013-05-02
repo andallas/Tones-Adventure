@@ -4,7 +4,8 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 	private float speed = 8;
-	private float jumpSpeed = 0.325f;
+	private float jumpSpeed = 0;
+	private float baseJumpSpeed = 0.125f;
 	private bool grounded = true;
 	private bool jumping = false;
 	private int life = 3;
@@ -23,11 +24,15 @@ public class Player : MonoBehaviour
 	void Start()
 	{
 		playerLifeTex = new Texture[]{(Texture)Resources.Load("Texture/gui/gear_life_empty"), (Texture)Resources.Load("Texture/gui/gear_life_full")};
+		jumpSpeed = baseJumpSpeed;
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
-		transform.Translate(Input.GetAxis("Horizontal") * speed * Time.deltaTime, 0, 0);
+		float force = (Input.GetAxis("Horizontal") * speed * Time.deltaTime);
+		//rigidbody.AddForce(new Vector3(force,0,0));
+		//transform.Translate(force, 0, 0);
+		rigidbody.MovePosition(rigidbody.position + new Vector3(force,0,0));
 
 		if(Input.GetButtonDown("Jump"))
 		{
@@ -39,19 +44,25 @@ public class Player : MonoBehaviour
 		}
 		if(jumping)
 		{
-			jumpSpeed -= Time.deltaTime;
-			transform.Translate(0, jumpSpeed, 0);
+			jumping = false;
+			rigidbody.AddForce(new Vector3(0,1000.0f,0));
+			/*jumpSpeed -= Time.deltaTime;
+			//transform.Translate(0, jumpSpeed, 0);
+			//rigidbody.AddForce(new Vector3(0,jumpSpeed * 10000 * Time.deltaTime,0));
+			rigidbody.AddForce(new Vector3(0, 40.0f, 0));
+			//rigidbody.AddExplosionForce(20, rigidbody.position, 10, 3.0f);
 			if(jumpSpeed <= 0)
 			{
 				jumping = false;
-				jumpSpeed = 0.325f;
-			}
+				jumpSpeed = baseJumpSpeed;
+			}*/
 			colNum = 12;
 		}
 		else
 		{
 			if(!grounded)
 			{
+				rigidbody.AddForce(new Vector3(0,-30.0f,0));
 				colNum = 8;
 			}
 			else
