@@ -5,10 +5,12 @@ public class ButtonController : MonoBehaviour
 {
 	private Button button;
 	private bool inZone;
+	public string action;
+	public bool toggleable;
 
 	void Start()
 	{
-		button = new Button();
+		button = new Button(toggleable, action);
 		inZone = false;
 	}
 	
@@ -18,9 +20,10 @@ public class ButtonController : MonoBehaviour
 		{
 			if(Input.GetButtonDown("Action"))
 			{
-				button.Action();
+				button.toggled = !button.toggled;
 			}
 		}
+		button.Update();
 	}
 
 	void OnTriggerEnter(Collider collider)
@@ -29,7 +32,11 @@ public class ButtonController : MonoBehaviour
 		{
 			inZone = true;
 		}
-		else
+	}
+
+	void OnTriggerExit(Collider collider)
+	{
+		if(collider.transform.gameObject.name == "Player")
 		{
 			inZone = false;
 		}

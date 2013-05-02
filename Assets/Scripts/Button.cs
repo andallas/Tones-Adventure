@@ -4,21 +4,19 @@ using System.Collections;
 public class Button
 {
 	private bool _canToggle;
-	private bool _toggled;
+	private bool _toggled = false;
 	private string _action;
 
 	public Button()
 	{
-		_canToggle = false;
-		_toggled = false;
-		_action = "default";
+		canToggle = false;
+		action = "default";
 	}
 
 	public Button(bool toggleAble, string act)
 	{
-		_canToggle = toggleAble;
-		_toggled = false;
-		_action = act;
+		canToggle = toggleAble;
+		action = act;
 	}
 
 	public void Update()

@@ -24,26 +24,6 @@ public class Player : MonoBehaviour
 	{
 		playerLifeTex = new Texture[]{(Texture)Resources.Load("Texture/gui/gear_life_empty"), (Texture)Resources.Load("Texture/gui/gear_life_full")};
 	}
-	
-	void SetSpriteAnimation(int colCount, int rowCount, int colNumber, int rowNumber, int totalCells, int duration)
-	{
-	    int index  = (int)(Time.time * duration);
-	    index = index % totalCells;
-	 
-	    float sizeX = 1.0f / colCount;
-	    float sizeY = 1.0f / rowCount;
-	    Vector2 size =  new Vector2(sizeX,sizeY);
-	 
-	    var uIndex = index % colCount;
-	    var vIndex = index / colCount;
-	 
-	    float offsetX = (uIndex+colNumber) * size.x;
-	    float offsetY = (1.0f - size.y) - (vIndex + rowNumber) * size.y;
-	    Vector2 offset = new Vector2(offsetX,offsetY);
-	 
-	    renderer.material.SetTextureOffset ("_MainTex", offset);
-	    renderer.material.SetTextureScale  ("_MainTex", size);
-	}
 
 	void Update()
 	{
@@ -113,6 +93,26 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	void SetSpriteAnimation(int colCount, int rowCount, int colNumber, int rowNumber, int totalCells, int duration)
+	{
+	    int index  = (int)(Time.time * duration);
+	    index = index % totalCells;
+	 
+	    float sizeX = 1.0f / colCount;
+	    float sizeY = 1.0f / rowCount;
+	    Vector2 size =  new Vector2(sizeX,sizeY);
+	 
+	    var uIndex = index % colCount;
+	    var vIndex = index / colCount;
+	 
+	    float offsetX = (uIndex+colNumber) * size.x;
+	    float offsetY = (1.0f - size.y) - (vIndex + rowNumber) * size.y;
+	    Vector2 offset = new Vector2(offsetX,offsetY);
+	 
+	    renderer.material.SetTextureOffset ("_MainTex", offset);
+	    renderer.material.SetTextureScale  ("_MainTex", size);
+	}
+	
 	bool IsAlive()
 	{
 		return (life <= 0);
