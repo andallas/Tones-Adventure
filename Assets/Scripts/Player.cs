@@ -10,14 +10,41 @@ public class Player : MonoBehaviour
 	private int life = 3;
 	private int maxLife = 3;
 	private float startX = 0.0f;
-	private float startY = 1.7f;
+	private float startY = 1.5f;
 	private Texture[] playerLifeTex;
+
+	private int col = 16;
+	private int row = 8;
+	private int rowNum = 0;
+	private int colNum = 0;
+	private int total = 4;
+	private int animDur = 10;
 
 	void Start()
 	{
 		playerLifeTex = new Texture[]{(Texture)Resources.Load("Texture/gui/gear_life_empty"), (Texture)Resources.Load("Texture/gui/gear_life_full")};
 	}
 	
+	void SetSpriteAnimation(int colCount, int rowCount, int colNumber, int rowNumber, int totalCells, int duration)
+	{
+	    int index  = (int)(Time.time * duration);
+	    index = index % totalCells;
+	 
+	    float sizeX = 1.0f / colCount;
+	    float sizeY = 1.0f / rowCount;
+	    Vector2 size =  new Vector2(sizeX,sizeY);
+	 
+	    var uIndex = index % colCount;
+	    var vIndex = index / colCount;
+	 
+	    float offsetX = (uIndex+colNumber) * size.x;
+	    float offsetY = (1.0f - size.y) - (vIndex + rowNumber) * size.y;
+	    Vector2 offset = new Vector2(offsetX,offsetY);
+	 
+	    renderer.material.SetTextureOffset ("_MainTex", offset);
+	    renderer.material.SetTextureScale  ("_MainTex", size);
+	}
+
 	void Update()
 	{
 		transform.Translate(Input.GetAxis("Horizontal") * speed * Time.deltaTime, 0, 0);
@@ -39,7 +66,21 @@ public class Player : MonoBehaviour
 				jumping = false;
 				jumpSpeed = 0.325f;
 			}
+			colNum = 12;
 		}
+		else
+		{
+			if(!grounded)
+			{
+				colNum = 8;
+			}
+			else
+			{
+				colNum = 0;
+			}
+		}
+
+		SetSpriteAnimation(col, row, colNum, rowNum, total, animDur);
 	}
 
 	void OnGUI()
@@ -63,8 +104,11 @@ public class Player : MonoBehaviour
 		{
 			foreach(ContactPoint contact in collision.contacts)
 			{
+				if(contact.normal == Vector3.up)
+				{
+					grounded = true;
+				}
 				Debug.DrawRay(contact.point, contact.normal, Color.red);
-				grounded = true;
 			}
 		}
 	}
