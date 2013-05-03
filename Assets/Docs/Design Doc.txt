@@ -25,11 +25,10 @@ To-Do
 		Platforms								[]
 		Puzzles									[]
 		Button object 							[]
-
-	Player										[]
+	Player										[x]
 		Camera follow							[x]
 		Movement								[x]
-		Attack									[]
+		Attack									[x]
 		Actions									[x]
 		Death									[x]
 	Enemy										[]
@@ -60,8 +59,8 @@ To-Do
 			Game music							[]
 	Win Conditions								[]
 	Lose Conditions								[]
-	GUI 										[]
-		Life Bar 								[]
+	GUI 										[x]
+		Life Bar 								[x]
 
 Intro:
 	First we need to conceptualize what it is we want to create. We spent a few hours doing that Sunday night after LD. Once we have a good idea of what it is that we want to create, we need to create some base goals. These should be key things that need to be accomplished, such as create a design document, define MVP goals for the game, create MVP for the game, etc... These goals, and the MVP will be the basis for the design document. The design document will be added to constantly throughout the project, so it is not important that it ever become 100% complete, but it will always be more complete than the game, until the game is finished. After the goals are thought up and written down, the MVP refinement can happen, this is where a list of everything that makes up MVP resides. Each item in that list is further refined, down to the simplest form needed that we both fully understand. This does not mean that we need to write psuedo-code, as I think that wastes time, but flowcharts showing basic ideas, or UML diagrams showing tricky classes/objects or hierarchies are not a bad idea, but these aren't required either. It really depends on the complexity of the base game and the MVP. There will be a running list that houses every stray idea/feature we have. This will be in a seperate doc to prevent distraction, as this doc will be accessed often. These ideas will not be automatically discarded, nor added.
