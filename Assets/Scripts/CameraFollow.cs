@@ -9,7 +9,7 @@ public class CameraFollow : MonoBehaviour
 	{
 		Vector3 position = player.transform.position;
 		position.y += 4;
-		position.z -= 10;
+		position.z -= 20;
 		this.transform.position = position;
 	}
 }
