@@ -5,25 +5,34 @@ public class ButtonController : MonoBehaviour
 {
 	private Button button;
 	private bool inZone;
+	private bool didToggleOnEnter;
 	public string action;
 	public bool toggleable;
+	public bool toggleOnEnter;
+	public int clipNum;
 
 	void Start()
 	{
 		button = new Button(toggleable, action);
 		inZone = false;
+		didToggleOnEnter = false;
 	}
 	
 	void Update()
 	{
-		if(inZone)
-		{
-			if(Input.GetButtonDown("Action"))
-			{
-				button.toggled = !button.toggled;
+		if(inZone){
+			if(toggleOnEnter){
+				if(didToggleOnEnter != inZone){
+					didToggleOnEnter = inZone;
+					button.toggled = !button.toggled;
+				}
+			} else {
+				if(Input.GetButtonDown("Action")){
+					button.toggled = !button.toggled;
+				}
 			}
 		}
-		button.Update();
+		button.Update(this);
 	}
 
 	void OnTriggerEnter(Collider collider)
@@ -39,6 +48,17 @@ public class ButtonController : MonoBehaviour
 		if(collider.transform.gameObject.name == "Player")
 		{
 			inZone = false;
+			didToggleOnEnter = false;
 		}
+	}
+
+	public int ButtonStatus()
+	{
+		return button.objStatus;
+	}
+
+	public void ButtonStatus(int status)
+	{
+		button.objStatus = status;
 	}
 }
