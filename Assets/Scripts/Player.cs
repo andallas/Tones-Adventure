@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
 	private bool canPhase = false;
 	private bool canDoubleJump = false;
 	private bool didDoubleJump = false;
+	private float distanceMoved;
 
 	public AudioClip[] audioClips;
 	private AudioSource[] audioSource;
@@ -54,7 +55,7 @@ public class Player : MonoBehaviour
     if(Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
         grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
     }
-    float distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+    distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
     rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
 
     //Reset Double Jump
@@ -209,5 +210,24 @@ public class Player : MonoBehaviour
 	public void EnableDoubleJump()
 	{
 		canDoubleJump = true;
+	}
+
+	public void PlaySuccessTones()
+	{
+		StartCoroutine(SuccessToneOne());
+	}
+
+	private IEnumerator SuccessToneOne()
+	{
+		PlayAudio(2);
+		yield return new WaitForSeconds(1);
+		PlayAudio(1);
+		yield return new WaitForSeconds(1);
+		PlayAudio(3);
+	}
+
+	public float DistanceMoved()
+	{
+		return distanceMoved;
 	}
 }

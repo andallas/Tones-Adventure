@@ -23,12 +23,14 @@ public class SlidingPlatform : MonoBehaviour {
 			if(elevator){
 				transform.Translate(0,moveDistance,0);
 				if(child != null){
-					child.transform.Translate(0,moveDistance,0);
+					Player player = (Player)child.GetComponent(typeof(Player));
+					player.transform.Translate(player.DistanceMoved(),moveDistance,0);
 				}
 			} else {
 				transform.Translate(moveDistance,0,0);
 				if(child != null){
-					child.transform.Translate(moveDistance,0,0);
+					Player player = (Player)child.GetComponent(typeof(Player));
+					player.transform.Translate(moveDistance + player.DistanceMoved(),0,0);
 				}
 			}
 
