@@ -4,7 +4,7 @@ using System.Collections;
 public class Player : MonoBehaviour
 {
 	private float speed = 8;
-	private float jumpSpeed = 1000.0f;
+	private float jumpSpeed = 1300.0f;
 	private bool grounded = true;
 	private int life = 3;
 	private int maxLife = 3;
@@ -21,12 +21,22 @@ public class Player : MonoBehaviour
 	private float halfPlayerHeight;
 	private float halfPlayerWidth;
 	private int raycastDistance = 2;
+	private bool jump;
+
+	public AudioClip[] audioClips;
+	private AudioSource[] audioSource;
 
 	void Start()
 	{
 		halfPlayerHeight = GetComponent<BoxCollider>().size.y / 2;
 		halfPlayerWidth = GetComponent<BoxCollider>().size.x / 2;
 		playerLifeTex = new Texture[]{(Texture)Resources.Load("Texture/gui/gear_life_empty"), (Texture)Resources.Load("Texture/gui/gear_life_full")};
+		
+		audioSource = new AudioSource[audioClips.Length];
+		for(int i = 0; i < audioSource.Length; i++){
+			audioSource[i] = gameObject.AddComponent<AudioSource>();
+			audioSource[i].clip = audioClips[i];
+		}
 	}
 
 	void Update()
@@ -38,7 +48,7 @@ public class Player : MonoBehaviour
     if(Physics.Raycast(transform.position - new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
         grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
     }
-    if (Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
+    if(Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
         grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
     }
     float distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
@@ -46,14 +56,17 @@ public class Player : MonoBehaviour
 
 		if(Input.GetButtonDown("Jump")){
 			if(grounded){
-				grounded = false;
-				rigidbody.AddForce(new Vector3(0,jumpSpeed,0));
+				float d = Time.deltaTime;
+				Vector3 v = new Vector3(0,jumpSpeed,0);
+				Debug.Log("Force: " + v + " | Delta: " + d);
+				rigidbody.AddForce(v);
+				//rigidbody.MovePosition(rigidbody.position + new Vector3(0,0.5f,0));
 				colNum = 12;
 				rowNum = 0;
 			}
 		} else {
 			if(!grounded){
-				rigidbody.AddForce(new Vector3(0,-30.0f,0));
+				rigidbody.AddForce(new Vector3(0,-2500.0f,0) * Time.deltaTime);
 				if(rigidbody.velocity.y <= 0){
 					colNum = 0;
 					rowNum = 1;
@@ -145,11 +158,11 @@ public class Player : MonoBehaviour
 		life--;
 		if(!IsAlive())
 		{
-			ResetPlayer();
+			Reset();
 		}
 	}
 
-	void ResetPlayer()
+	public void Reset()
 	{
 		life = maxLife;
 		transform.position = new Vector3(startX, startY, 0);
@@ -159,5 +172,10 @@ public class Player : MonoBehaviour
 	{
 		startX = posX;
 		startY = posY;
+	}
+
+	public void PlayAudio(int clipNum)
+	{
+		audioSource[clipNum].Play();
 	}
 }
