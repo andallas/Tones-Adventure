@@ -10,10 +10,11 @@ public class ButtonController : MonoBehaviour
 	public bool toggleable;
 	public bool toggleOnEnter;
 	public int clipNum;
+	public string target;
 
 	void Start()
 	{
-		button = new Button(toggleable, action);
+		button = new Button(toggleable, action, target, clipNum);
 		inZone = false;
 		didToggleOnEnter = false;
 	}
@@ -32,7 +33,7 @@ public class ButtonController : MonoBehaviour
 				}
 			}
 		}
-		button.Update(this);
+		button.Update();
 	}
 
 	void OnTriggerEnter(Collider collider)

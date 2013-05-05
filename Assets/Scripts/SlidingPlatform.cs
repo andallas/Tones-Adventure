@@ -5,14 +5,14 @@ public class SlidingPlatform : MonoBehaviour {
 	public int direction;
 	public float distanceToTravel;
 	public bool elevator;
+	public bool forceStayActive;
 	private float distanceTraveled = 0;
 	private GameObject child = null;
-	private bool isActive = true;
+	public bool isActive;
 
 	void Start(){
 		//Ensure we don't start out of our expected dataset
 		direction = direction <= -1 ? -1 : 1;
-		isActive = !(elevator);
 	}
 	
 	void Update(){
@@ -35,7 +35,7 @@ public class SlidingPlatform : MonoBehaviour {
 			if(distanceTraveled >= distanceToTravel){
 				direction = direction == 1 ? -1 : 1;
 				distanceTraveled = 0;
-				if(elevator){
+				if(elevator && !forceStayActive){
 					isActive = false;
 				}
 			}

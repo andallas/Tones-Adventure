@@ -22,6 +22,9 @@ public class Player : MonoBehaviour
 	private float halfPlayerWidth;
 	private int raycastDistance = 2;
 	private bool jump;
+	private bool canPhase = false;
+	private bool canDoubleJump = false;
+	private bool didDoubleJump = false;
 
 	public AudioClip[] audioClips;
 	private AudioSource[] audioSource;
@@ -54,15 +57,17 @@ public class Player : MonoBehaviour
     float distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
     rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
 
+    //Reset Double Jump
+    if(didDoubleJump && grounded){
+    	didDoubleJump = false;
+    }
+
 		if(Input.GetButtonDown("Jump")){
 			if(grounded){
-				float d = Time.deltaTime;
-				Vector3 v = new Vector3(0,jumpSpeed,0);
-				Debug.Log("Force: " + v + " | Delta: " + d);
-				rigidbody.AddForce(v);
-				//rigidbody.MovePosition(rigidbody.position + new Vector3(0,0.5f,0));
-				colNum = 12;
-				rowNum = 0;
+				Jump();
+			} else
+			if(canDoubleJump && !didDoubleJump){
+				DoubleJump();
 			}
 		} else {
 			if(!grounded){
@@ -96,6 +101,11 @@ public class Player : MonoBehaviour
 			}
 		}
 		SetSpriteAnimation(col, row, colNum, rowNum, total, animSpeed);
+
+		//Phasing
+		if(canPhase){
+			Physics.IgnoreLayerCollision(0,8, Input.GetButton("Phase"));
+		}
 	}
 
 	void OnGUI()
@@ -147,6 +157,19 @@ public class Player : MonoBehaviour
 	    renderer.material.SetTextureOffset ("_MainTex", offset);
 	    renderer.material.SetTextureScale  ("_MainTex", size);
 	}
+
+	void DoubleJump()
+	{
+		didDoubleJump = true;
+		Jump();
+	}
+
+	void Jump()
+	{
+		rigidbody.AddForce(new Vector3(0,jumpSpeed,0));
+		colNum = 12;
+		rowNum = 0;
+	}
 	
 	bool IsAlive()
 	{
@@ -177,5 +200,14 @@ public class Player : MonoBehaviour
 	public void PlayAudio(int clipNum)
 	{
 		audioSource[clipNum].Play();
+	}
+
+	public void EnablePhase()
+	{
+		canPhase = true;
+	}
+	public void EnableDoubleJump()
+	{
+		canDoubleJump = true;
 	}
 }
