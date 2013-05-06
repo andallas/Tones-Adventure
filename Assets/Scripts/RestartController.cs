@@ -9,7 +9,7 @@ public class RestartController : MonoBehaviour {
 			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if(Physics.Raycast(ray, out hit)){
 				if(hit.transform.name == "Restart"){
-					audio.Play();
+					GameObject.Find("Main Camera").audio.Play();
 					Invoke("LoadLevel", 0.4f);
 				}
 			}

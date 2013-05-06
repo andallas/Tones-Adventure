@@ -8,9 +8,9 @@ public class Player : MonoBehaviour
 	private bool grounded = true;
 	private int life = 3;
 	private int maxLife = 3;
-	private float startX = 0.0f;
-	private float startY = 2.6f;
-	private Texture[] playerLifeTex;
+	private float startX = -12.0f;
+	private float startY = 2.55f;
+	private Texture[] guiTextures;
 
 	private int col = 16;
 	private int row = 8;
@@ -26,6 +26,10 @@ public class Player : MonoBehaviour
 	private bool canDoubleJump = false;
 	private bool didDoubleJump = false;
 	private float distanceMoved;
+	private bool[] keys;
+	private bool win = false;
+	private float alphaFadeValue = 0;
+	private bool invokedLevelChange = false;
 
 	public AudioClip[] audioClips;
 	private AudioSource[] audioSource;
@@ -34,13 +38,24 @@ public class Player : MonoBehaviour
 	{
 		halfPlayerHeight = GetComponent<BoxCollider>().size.y / 2;
 		halfPlayerWidth = GetComponent<BoxCollider>().size.x / 2;
-		playerLifeTex = new Texture[]{(Texture)Resources.Load("Texture/gui/gear_life_empty"), (Texture)Resources.Load("Texture/gui/gear_life_full")};
+		guiTextures = new Texture[]{
+			(Texture)Resources.Load("Texture/gui/gear_life_empty"),
+			(Texture)Resources.Load("Texture/gui/gear_life_full"),
+			(Texture)Resources.Load("Texture/gui/key_blank"),
+			(Texture)Resources.Load("Texture/gui/key_full"),
+			(Texture)Resources.Load("Texture/gui/black")
+		};
 		
 		audioSource = new AudioSource[audioClips.Length];
 		for(int i = 0; i < audioSource.Length; i++){
 			audioSource[i] = gameObject.AddComponent<AudioSource>();
 			audioSource[i].clip = audioClips[i];
 		}
+
+		keys = new bool[3];
+		keys[0] = false;
+		keys[1] = false;
+		keys[2] = false;
 	}
 
 	void Update()
@@ -107,16 +122,39 @@ public class Player : MonoBehaviour
 		if(canPhase){
 			Physics.IgnoreLayerCollision(0,8, Input.GetButton("Phase"));
 		}
+
+		//Winning
+		if(win){
+			if(alphaFadeValue >= 1 && !invokedLevelChange){
+				invokedLevelChange = true;
+				Invoke("LoadWinScreen", 2.0f);
+			}
+		}
 	}
 
 	void OnGUI()
 	{
 		for(int i = 0; i < maxLife; i++){
 			if(i < life){
-				GUI.DrawTexture(new Rect(10 + (i * 40),10,50 + (i * 40),50), playerLifeTex[1], ScaleMode.ScaleToFit, true);
+				GUI.DrawTexture(new Rect(10 + (i * 40),10,50 + (i * 40),50), guiTextures[1], ScaleMode.ScaleToFit, true);
 			} else {
-				GUI.DrawTexture(new Rect(10 + (i * 40),10,50 + (i * 40),50), playerLifeTex[0], ScaleMode.ScaleToFit, true);
+				GUI.DrawTexture(new Rect(10 + (i * 40),10,50 + (i * 40),50), guiTextures[0], ScaleMode.ScaleToFit, true);
 			}
+		}
+		Debug.Log(Screen.width);
+		float w = Screen.width - 60;
+		float w_2 = w + 40;
+		for(int i = 0; i < keys.Length; i++){
+			if(keys[i]){
+				GUI.DrawTexture(new Rect(w - (i * 50),10,50,50), guiTextures[3], ScaleMode.ScaleToFit, true);
+			} else {
+				GUI.DrawTexture(new Rect(w - (i * 50),10,50,50), guiTextures[2], ScaleMode.ScaleToFit, true);
+			}
+		}
+		if(win){
+			alphaFadeValue += Mathf.Clamp01(Time.deltaTime / 5);
+			GUI.color = new Color(0, 0, 0, alphaFadeValue);
+			GUI.DrawTexture( new Rect(0, 0, Screen.width, Screen.height ), guiTextures[4] );
 		}
 	}
 
@@ -186,9 +224,17 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	public void Heal()
+	{
+		if(life < maxLife){
+			PlayAudio(8);
+		}
+		life = maxLife;
+	}
+
 	public void Reset()
 	{
-		life = maxLife;
+		Heal();
 		transform.position = new Vector3(startX, startY, 0);
 	}
 
@@ -253,5 +299,58 @@ public class Player : MonoBehaviour
 	public float DistanceMoved()
 	{
 		return distanceMoved;
+	}
+
+	public void PickupKey(string key)
+	{
+		bool playSound = false;
+		if(key == "one"){
+			playSound = !keys[0];
+			keys[0] = true;
+		} else
+		if(key == "two"){
+			playSound = !keys[1];
+			keys[1] = true;
+		} else
+		if(key == "three"){
+			playSound = !keys[2];
+			keys[2] = true;
+		}
+		if(playSound){
+			PlayAudio(6);
+		}
+	}
+
+	public bool PlaceKey(string key)
+	{
+		bool playSound = false;
+		if(key == "one"){
+			playSound = keys[0];
+			keys[0] = false;
+		} else
+		if(key == "two"){
+			playSound = keys[1];
+			keys[1] = false;
+		} else
+		if(key == "three"){
+			playSound = keys[2];
+			keys[2] = false;
+		}
+		if(playSound){
+			PlayAudio(6);
+		} else {
+			PlayAudio(7);
+		}
+		return playSound;
+	}
+
+	public void WinConditionMet()
+	{
+		win = true;
+	}
+
+	private void LoadWinScreen()
+	{
+		Application.LoadLevel("game_win");
 	}
 }

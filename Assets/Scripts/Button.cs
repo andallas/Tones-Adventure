@@ -68,6 +68,24 @@ public class Button
 				player.EnablePhase();
 			break;
 
+			case "pickup_key":
+				player.PickupKey(target);
+			break;
+
+			case "place_key":
+				if(player.PlaceKey(target)){
+					_objStatus = 1;
+				}
+			break;
+
+			case "refill_health":
+				player.Heal();
+			break;
+
+			case "win":
+				player.WinConditionMet();
+			break;
+
 			default:
 				Debug.LogError("No action specified");
 			break;
