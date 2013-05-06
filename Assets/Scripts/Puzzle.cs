@@ -59,6 +59,14 @@ public class Puzzle : MonoBehaviour {
 					}
 				break;
 
+				case "exit":
+					if(btn[0].ButtonStatus() == 1 && btn[1].ButtonStatus() == 1 && btn[2].ButtonStatus() == 1){
+						((Player)GameObject.Find("Player").GetComponent(typeof(Player))).PlaySuccessTonesTwo();
+						platform[0].ToggleActive();
+						complete = true;
+					}
+				break;
+
 				default:
 					Debug.LogError("No Puzzle Name Set.");
 				break;

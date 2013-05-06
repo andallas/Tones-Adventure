@@ -27,6 +27,9 @@ public class Player : MonoBehaviour
 	private bool didDoubleJump = false;
 	private float distanceMoved;
 	private bool[] keys;
+	private bool win = false;
+	private float alphaFadeValue = 0;
+	private bool invokedLevelChange = false;
 
 	public AudioClip[] audioClips;
 	private AudioSource[] audioSource;
@@ -39,7 +42,8 @@ public class Player : MonoBehaviour
 			(Texture)Resources.Load("Texture/gui/gear_life_empty"),
 			(Texture)Resources.Load("Texture/gui/gear_life_full"),
 			(Texture)Resources.Load("Texture/gui/key_blank"),
-			(Texture)Resources.Load("Texture/gui/key_full")
+			(Texture)Resources.Load("Texture/gui/key_full"),
+			(Texture)Resources.Load("Texture/gui/black")
 		};
 		
 		audioSource = new AudioSource[audioClips.Length];
@@ -118,6 +122,14 @@ public class Player : MonoBehaviour
 		if(canPhase){
 			Physics.IgnoreLayerCollision(0,8, Input.GetButton("Phase"));
 		}
+
+		//Winning
+		if(win){
+			if(alphaFadeValue >= 1 && !invokedLevelChange){
+				invokedLevelChange = true;
+				Invoke("LoadWinScreen", 2.0f);
+			}
+		}
 	}
 
 	void OnGUI()
@@ -136,9 +148,13 @@ public class Player : MonoBehaviour
 			if(keys[i]){
 				GUI.DrawTexture(new Rect(w - (i * 50),10,50,50), guiTextures[3], ScaleMode.ScaleToFit, true);
 			} else {
-				//GUI.DrawTexture(new Rect(w - (i * 40),10,w_2 - (i * 40),50), guiTextures[2], ScaleMode.ScaleToFit, true);
 				GUI.DrawTexture(new Rect(w - (i * 50),10,50,50), guiTextures[2], ScaleMode.ScaleToFit, true);
 			}
+		}
+		if(win){
+			alphaFadeValue += Mathf.Clamp01(Time.deltaTime / 5);
+			GUI.color = new Color(0, 0, 0, alphaFadeValue);
+			GUI.DrawTexture( new Rect(0, 0, Screen.width, Screen.height ), guiTextures[4] );
 		}
 	}
 
@@ -208,9 +224,17 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	public void Heal()
+	{
+		if(life < maxLife){
+			PlayAudio(8);
+		}
+		life = maxLife;
+	}
+
 	public void Reset()
 	{
-		life = maxLife;
+		Heal();
 		transform.position = new Vector3(startX, startY, 0);
 	}
 
@@ -295,5 +319,38 @@ public class Player : MonoBehaviour
 		if(playSound){
 			PlayAudio(6);
 		}
+	}
+
+	public bool PlaceKey(string key)
+	{
+		bool playSound = false;
+		if(key == "one"){
+			playSound = keys[0];
+			keys[0] = false;
+		} else
+		if(key == "two"){
+			playSound = keys[1];
+			keys[1] = false;
+		} else
+		if(key == "three"){
+			playSound = keys[2];
+			keys[2] = false;
+		}
+		if(playSound){
+			PlayAudio(6);
+		} else {
+			PlayAudio(7);
+		}
+		return playSound;
+	}
+
+	public void WinConditionMet()
+	{
+		win = true;
+	}
+
+	private void LoadWinScreen()
+	{
+		Application.LoadLevel("game_win");
 	}
 }
