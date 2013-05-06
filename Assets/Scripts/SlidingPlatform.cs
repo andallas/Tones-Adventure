@@ -5,14 +5,14 @@ public class SlidingPlatform : MonoBehaviour {
 	public int direction;
 	public float distanceToTravel;
 	public bool elevator;
+	public bool forceStayActive;
 	private float distanceTraveled = 0;
 	private GameObject child = null;
-	private bool isActive = true;
+	public bool isActive;
 
 	void Start(){
 		//Ensure we don't start out of our expected dataset
 		direction = direction <= -1 ? -1 : 1;
-		isActive = !(elevator);
 	}
 	
 	void Update(){
@@ -23,19 +23,21 @@ public class SlidingPlatform : MonoBehaviour {
 			if(elevator){
 				transform.Translate(0,moveDistance,0);
 				if(child != null){
-					child.transform.Translate(0,moveDistance,0);
+					Player player = (Player)child.GetComponent(typeof(Player));
+					player.transform.Translate(player.DistanceMoved(),moveDistance,0);
 				}
 			} else {
 				transform.Translate(moveDistance,0,0);
 				if(child != null){
-					child.transform.Translate(moveDistance,0,0);
+					Player player = (Player)child.GetComponent(typeof(Player));
+					player.transform.Translate(moveDistance + player.DistanceMoved(),0,0);
 				}
 			}
 
 			if(distanceTraveled >= distanceToTravel){
 				direction = direction == 1 ? -1 : 1;
 				distanceTraveled = 0;
-				if(elevator){
+				if(elevator && !forceStayActive){
 					isActive = false;
 				}
 			}

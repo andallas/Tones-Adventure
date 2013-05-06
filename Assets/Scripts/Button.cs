@@ -7,6 +7,8 @@ public class Button
 	private bool _toggled = false;
 	private string _action;
 	private int _objStatus = 0;
+	private string target;
+	private int soundClipNum;
 
 	public Button()
 	{
@@ -14,17 +16,19 @@ public class Button
 		action = "default";
 	}
 
-	public Button(bool toggleAble, string act)
+	public Button(bool toggleAble, string act, string trgt, int clipNum)
 	{
 		canToggle = toggleAble;
 		action = act;
+		target = trgt;
+		soundClipNum = clipNum;
 	}
 
-	public void Update(ButtonController bc)
+	public void Update()
 	{
 		if(toggled)
 		{
-			Action(bc);
+			Action();
 		}
 		if(!canToggle)
 		{
@@ -32,7 +36,7 @@ public class Button
 		}
 	}
 
-	public void Action(ButtonController bc)
+	public void Action()
 	{
 		Player player = (Player)GameObject.Find("Player").GetComponent(typeof(Player));
 		switch(action)
@@ -48,20 +52,33 @@ public class Button
 			break;
 
 			case "move_verticle_platorm":
-				SlidingPlatform sp = (SlidingPlatform)bc.transform.parent.gameObject.GetComponent(typeof(SlidingPlatform));
-				sp.ToggleActive();
+				ActivateTarget();
 			break;
 
 			case "puzzle_one":
-				Debug.Log("Updating Puzzle One!");
+			case "puzzle_two":
 				_objStatus = 1;
-				player.PlayAudio(bc.clipNum);
+			break;
+
+			case "grant_double_jump":
+				player.EnableDoubleJump();
+			break;
+
+			case "grant_phase":
+				player.EnablePhase();
 			break;
 
 			default:
 				Debug.LogError("No action specified");
 			break;
 		}
+		player.PlayAudio(soundClipNum);
+	}
+
+	public void ActivateTarget()
+	{
+		SlidingPlatform sp = (SlidingPlatform)GameObject.Find(target).GetComponent(typeof(SlidingPlatform));
+		sp.ToggleActive();
 	}
 
 	// Setters & Getters
