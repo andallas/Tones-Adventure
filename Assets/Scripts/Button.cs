@@ -68,6 +68,19 @@ public class Button
 				player.EnablePhase();
 			break;
 
+			case "pickup_key":
+				if(target == "one"){
+
+				} else
+				if(target == "two"){
+
+				} else
+				if(target == "three"){
+					
+				}
+
+			break;
+
 			default:
 				Debug.LogError("No action specified");
 			break;

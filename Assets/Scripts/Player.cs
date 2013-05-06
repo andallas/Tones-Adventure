@@ -8,8 +8,8 @@ public class Player : MonoBehaviour
 	private bool grounded = true;
 	private int life = 3;
 	private int maxLife = 3;
-	private float startX = 0.0f;
-	private float startY = 2.6f;
+	private float startX = -12.0f;
+	private float startY = 2.55f;
 	private Texture[] playerLifeTex;
 
 	private int col = 16;
