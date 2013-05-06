@@ -200,7 +200,9 @@ public class Player : MonoBehaviour
 
 	public void PlayAudio(int clipNum)
 	{
-		audioSource[clipNum].Play();
+		if(clipNum > -1){
+			audioSource[clipNum].Play();
+		}
 	}
 
 	public void EnablePhase()
@@ -209,6 +211,9 @@ public class Player : MonoBehaviour
 	}
 	public void EnableDoubleJump()
 	{
+		if(canDoubleJump == false){
+			PlaySuccessTones();
+		}
 		canDoubleJump = true;
 	}
 
@@ -219,11 +224,27 @@ public class Player : MonoBehaviour
 
 	private IEnumerator SuccessToneOne()
 	{
-		PlayAudio(2);
-		yield return new WaitForSeconds(1);
+		yield return new WaitForSeconds(2f);
 		PlayAudio(1);
-		yield return new WaitForSeconds(1);
+		yield return new WaitForSeconds(1f);
+		PlayAudio(2);
+		yield return new WaitForSeconds(1f);
 		PlayAudio(3);
+	}
+
+	public void PlaySuccessTonesTwo()
+	{
+		StartCoroutine(SuccessToneTwo());
+	}
+
+	private IEnumerator SuccessToneTwo()
+	{
+		yield return new WaitForSeconds(2f);
+		PlayAudio(1);
+		yield return new WaitForSeconds(1f);
+		PlayAudio(3);
+		yield return new WaitForSeconds(1f);
+		PlayAudio(2);
 	}
 
 	public float DistanceMoved()

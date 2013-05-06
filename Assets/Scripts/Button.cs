@@ -52,12 +52,16 @@ public class Button
 			break;
 
 			case "move_verticle_platorm":
-				SlidingPlatform sp = (SlidingPlatform)GameObject.Find(target).GetComponent(typeof(SlidingPlatform));
-				sp.ToggleActive();
+				ActivateTarget();
 			break;
 
 			case "puzzle_one":
+			case "puzzle_two":
 				_objStatus = 1;
+			break;
+
+			case "grant_double_jump":
+				player.EnableDoubleJump();
 			break;
 
 			default:
@@ -65,6 +69,12 @@ public class Button
 			break;
 		}
 		player.PlayAudio(soundClipNum);
+	}
+
+	public void ActivateTarget()
+	{
+		SlidingPlatform sp = (SlidingPlatform)GameObject.Find(target).GetComponent(typeof(SlidingPlatform));
+		sp.ToggleActive();
 	}
 
 	// Setters & Getters

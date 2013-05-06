@@ -62,4 +62,9 @@ public class ButtonController : MonoBehaviour
 	{
 		button.objStatus = status;
 	}
+
+	public void ActivateTarget()
+	{
+		button.ActivateTarget();
+	}
 }
