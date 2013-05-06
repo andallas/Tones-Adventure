@@ -64,6 +64,10 @@ public class Button
 				player.EnableDoubleJump();
 			break;
 
+			case "grant_phase":
+				player.EnablePhase();
+			break;
+
 			default:
 				Debug.LogError("No action specified");
 			break;

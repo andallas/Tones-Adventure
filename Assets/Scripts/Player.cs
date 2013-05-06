@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
 	private int raycastDistance = 2;
 	private bool jump;
 	private bool canPhase = false;
-	private bool canDoubleJump = false;
+	private bool canDoubleJump = true;
 	private bool didDoubleJump = false;
 	private float distanceMoved;
 
@@ -207,6 +207,9 @@ public class Player : MonoBehaviour
 
 	public void EnablePhase()
 	{
+		if(canPhase == false){
+			PlaySuccessTones();
+		}
 		canPhase = true;
 	}
 	public void EnableDoubleJump()
