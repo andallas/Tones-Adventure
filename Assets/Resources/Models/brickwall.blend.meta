@@ -311,6 +311,7 @@ ModelImporter:
     2300198: Cube_099
     2300200: Cube_100
     2300202: Sphere_001
+    2300204: //RootNode
     3300000: Cube
     3300002: Cube_001
     3300004: Cube_002
@@ -413,6 +414,7 @@ ModelImporter:
     3300198: Cube_099
     3300200: Cube_100
     3300202: Sphere_001
+    3300204: //RootNode
     4300000: Cube_100
     4300002: Cube_099
     4300004: Cube_098
