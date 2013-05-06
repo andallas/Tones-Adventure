@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
 	private int maxLife = 3;
 	private float startX = -12.0f;
 	private float startY = 2.55f;
-	private Texture[] playerLifeTex;
+	private Texture[] guiTextures;
 
 	private int col = 16;
 	private int row = 8;
@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
 	private bool canDoubleJump = false;
 	private bool didDoubleJump = false;
 	private float distanceMoved;
+	private bool[] keys;
 
 	public AudioClip[] audioClips;
 	private AudioSource[] audioSource;
@@ -34,13 +35,23 @@ public class Player : MonoBehaviour
 	{
 		halfPlayerHeight = GetComponent<BoxCollider>().size.y / 2;
 		halfPlayerWidth = GetComponent<BoxCollider>().size.x / 2;
-		playerLifeTex = new Texture[]{(Texture)Resources.Load("Texture/gui/gear_life_empty"), (Texture)Resources.Load("Texture/gui/gear_life_full")};
+		guiTextures = new Texture[]{
+			(Texture)Resources.Load("Texture/gui/gear_life_empty"),
+			(Texture)Resources.Load("Texture/gui/gear_life_full"),
+			(Texture)Resources.Load("Texture/gui/key_blank"),
+			(Texture)Resources.Load("Texture/gui/key_full")
+		};
 		
 		audioSource = new AudioSource[audioClips.Length];
 		for(int i = 0; i < audioSource.Length; i++){
 			audioSource[i] = gameObject.AddComponent<AudioSource>();
 			audioSource[i].clip = audioClips[i];
 		}
+
+		keys = new bool[3];
+		keys[0] = false;
+		keys[1] = false;
+		keys[2] = false;
 	}
 
 	void Update()
@@ -113,9 +124,20 @@ public class Player : MonoBehaviour
 	{
 		for(int i = 0; i < maxLife; i++){
 			if(i < life){
-				GUI.DrawTexture(new Rect(10 + (i * 40),10,50 + (i * 40),50), playerLifeTex[1], ScaleMode.ScaleToFit, true);
+				GUI.DrawTexture(new Rect(10 + (i * 40),10,50 + (i * 40),50), guiTextures[1], ScaleMode.ScaleToFit, true);
 			} else {
-				GUI.DrawTexture(new Rect(10 + (i * 40),10,50 + (i * 40),50), playerLifeTex[0], ScaleMode.ScaleToFit, true);
+				GUI.DrawTexture(new Rect(10 + (i * 40),10,50 + (i * 40),50), guiTextures[0], ScaleMode.ScaleToFit, true);
+			}
+		}
+		Debug.Log(Screen.width);
+		float w = Screen.width - 60;
+		float w_2 = w + 40;
+		for(int i = 0; i < keys.Length; i++){
+			if(keys[i]){
+				GUI.DrawTexture(new Rect(w - (i * 50),10,50,50), guiTextures[3], ScaleMode.ScaleToFit, true);
+			} else {
+				//GUI.DrawTexture(new Rect(w - (i * 40),10,w_2 - (i * 40),50), guiTextures[2], ScaleMode.ScaleToFit, true);
+				GUI.DrawTexture(new Rect(w - (i * 50),10,50,50), guiTextures[2], ScaleMode.ScaleToFit, true);
 			}
 		}
 	}
@@ -253,5 +275,25 @@ public class Player : MonoBehaviour
 	public float DistanceMoved()
 	{
 		return distanceMoved;
+	}
+
+	public void PickupKey(string key)
+	{
+		bool playSound = false;
+		if(key == "one"){
+			playSound = !keys[0];
+			keys[0] = true;
+		} else
+		if(key == "two"){
+			playSound = !keys[1];
+			keys[1] = true;
+		} else
+		if(key == "three"){
+			playSound = !keys[2];
+			keys[2] = true;
+		}
+		if(playSound){
+			PlayAudio(6);
+		}
 	}
 }

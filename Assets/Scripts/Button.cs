@@ -69,16 +69,7 @@ public class Button
 			break;
 
 			case "pickup_key":
-				if(target == "one"){
-
-				} else
-				if(target == "two"){
-
-				} else
-				if(target == "three"){
-					
-				}
-
+				player.PickupKey(target);
 			break;
 
 			default:
