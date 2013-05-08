@@ -141,7 +141,6 @@ public class Player : MonoBehaviour
 				GUI.DrawTexture(new Rect(10 + (i * 40),10,50 + (i * 40),50), guiTextures[0], ScaleMode.ScaleToFit, true);
 			}
 		}
-		Debug.Log(Screen.width);
 		float w = Screen.width - 60;
 		float w_2 = w + 40;
 		for(int i = 0; i < keys.Length; i++){
