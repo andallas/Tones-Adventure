@@ -11,7 +11,7 @@ public class LevelGen : MonoBehaviour
 		{
 			for(int j = 0; j < 5; j++)
 			{
-				Instantiate(prefab, new Vector3(i * 2.0F, 0, 0), Quaternion.identity);
+				//Instantiate(prefab, new Vector3(i * 2.0F, 0, 0), Quaternion.identity);
 			}
 		}
 	}
