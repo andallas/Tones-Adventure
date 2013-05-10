@@ -254,6 +254,7 @@ public class Player : MonoBehaviour
 	{
 		if(canPhase == false){
 			PlaySuccessTones();
+			Destroy(GameObject.Find("Phase_Powerup"));
 		}
 		canPhase = true;
 	}
@@ -261,6 +262,7 @@ public class Player : MonoBehaviour
 	{
 		if(canDoubleJump == false){
 			PlaySuccessTones();
+			Destroy(GameObject.Find("Double_Jump_Powerup"));
 		}
 		canDoubleJump = true;
 	}
