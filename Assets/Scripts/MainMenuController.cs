@@ -3,8 +3,8 @@ using System.Collections;
 public class MainMenuController : MonoBehaviour {
 	private Ray ray;
 	private RaycastHit hit;
-	private string item;
-	private string villain;
+	public static string G_item;
+	public static string G_villain;
 
 	void Start(){
 		//Random
@@ -32,9 +32,9 @@ public class MainMenuController : MonoBehaviour {
 			"Doctor Isabel McKenzie Merekaun",
 			"Professor Arrah T. Hertpool"
 		};
-		item = items[Random.Range(0,7)];
-		villain = villains[Random.Range(0,21)];
-		GameObject.Find("Objective").GetComponent<TextMesh>().text = "Tone needs to obtain her <color=green>"+item+"</color> which was stolen by <color=red>\n"+villain+"</color>, \nso she heads to the laboratory to find it.";
+		G_item = items[Random.Range(0,7)];
+		G_villain = villains[Random.Range(0,21)];
+		GameObject.Find("Objective").GetComponent<TextMesh>().text = "Tone needs to obtain her <color=green>"+G_item+"</color> which was stolen by <color=red>\n"+G_villain+"</color>, \nso she heads to the laboratory to find it.";
 	}
 	
 	void Update(){

@@ -48,7 +48,7 @@ public class Button
 
 			case "reset_player":
 
-				player.Reset();
+				player.Kill();
 			break;
 
 			case "move_verticle_platorm":

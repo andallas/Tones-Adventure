@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 	private float speed = 8;
 	private float jumpSpeed = 1300.0f;
 	private bool grounded = true;
+	private int lives = 3;
 	private int life = 3;
 	private int maxLife = 3;
 	private float startX = -12.0f;
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour
 	private float distanceMoved;
 	private bool[] keys;
 	private bool win = false;
+	private bool lose = false;
 	private float alphaFadeValue = 0;
 	private bool invokedLevelChange = false;
 
@@ -61,22 +63,22 @@ public class Player : MonoBehaviour
 	void Update()
 	{
 		RaycastHit hit;
-    if(Physics.Raycast(transform.position + new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
-    		grounded = (hit.distance <= halfPlayerHeight);
-    }
-    if(Physics.Raycast(transform.position - new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
-        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
-    }
-    if(Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
-        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
-    }
-    distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-    rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
+	    if(Physics.Raycast(transform.position + new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
+	    		grounded = (hit.distance <= halfPlayerWidth);
+	    }
+	    if(Physics.Raycast(transform.position - new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
+	        grounded = grounded ? grounded : (hit.distance <= halfPlayerWidth);
+	    }
+	    if(Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
+	        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
+	    }
+	    distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+	    rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
 
-    //Reset Double Jump
-    if(didDoubleJump && grounded){
-    	didDoubleJump = false;
-    }
+	    //Reset Double Jump
+	    if(didDoubleJump && grounded){
+	    	didDoubleJump = false;
+	    }
 
 		if(Input.GetButtonDown("Jump")){
 			if(grounded){
@@ -130,6 +132,15 @@ public class Player : MonoBehaviour
 				Invoke("LoadWinScreen", 2.0f);
 			}
 		}
+		//Lost
+		if(lose){
+			Debug.Log("Lose");
+			if(alphaFadeValue >= 1 && !invokedLevelChange){
+				Debug.Log("Losing");
+				invokedLevelChange = true;
+				Invoke("LoadLoseScreen", 2.0f);
+			}
+		}
 	}
 
 	void OnGUI()
@@ -142,7 +153,6 @@ public class Player : MonoBehaviour
 			}
 		}
 		float w = Screen.width - 60;
-		float w_2 = w + 40;
 		for(int i = 0; i < keys.Length; i++){
 			if(keys[i]){
 				GUI.DrawTexture(new Rect(w - (i * 50),10,50,50), guiTextures[3], ScaleMode.ScaleToFit, true);
@@ -151,6 +161,11 @@ public class Player : MonoBehaviour
 			}
 		}
 		if(win){
+			alphaFadeValue += Mathf.Clamp01(Time.deltaTime / 5);
+			GUI.color = new Color(0, 0, 0, alphaFadeValue);
+			GUI.DrawTexture( new Rect(0, 0, Screen.width, Screen.height ), guiTextures[4] );
+		}
+		if(lose){
 			alphaFadeValue += Mathf.Clamp01(Time.deltaTime / 5);
 			GUI.color = new Color(0, 0, 0, alphaFadeValue);
 			GUI.DrawTexture( new Rect(0, 0, Screen.width, Screen.height ), guiTextures[4] );
@@ -219,8 +234,26 @@ public class Player : MonoBehaviour
 		life--;
 		if(!IsAlive())
 		{
-			Reset();
+			lives--;
+			Debug.Log("Lives: " + lives);
+			if(lives < 0)
+				lose = true;
+			else
+				Reset();
 		}
+	}
+
+	public void Kill()
+	{
+		DamagePlayer();
+		DamagePlayer();
+		DamagePlayer();
+	}
+
+	public void Reset()
+	{
+		Heal();
+		transform.position = new Vector3(startX, startY, 0);
 	}
 
 	public void Heal()
@@ -229,12 +262,6 @@ public class Player : MonoBehaviour
 			PlayAudio(8);
 		}
 		life = maxLife;
-	}
-
-	public void Reset()
-	{
-		Heal();
-		transform.position = new Vector3(startX, startY, 0);
 	}
 
 	void SetPlayerStart(float posX, float posY)
@@ -353,5 +380,16 @@ public class Player : MonoBehaviour
 	private void LoadWinScreen()
 	{
 		Application.LoadLevel("game_win");
+	}
+
+	public void LoseConditionMet()
+	{
+		lose = true;
+	}
+
+	private void LoadLoseScreen()
+	{
+		Debug.Log("Lost");
+		Application.LoadLevel("game_over");
 	}
 }
