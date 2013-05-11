@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
 	private int raycastDistance = 2;
 	private bool jump;
 	private bool canPhase = false;
-	private bool canDoubleJump = false;
+	private bool canDoubleJump = true;
 	private bool didDoubleJump = false;
 	private float distanceMoved;
 	private bool[] keys;
