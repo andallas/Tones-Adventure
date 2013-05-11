@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
 			(Texture)Resources.Load("Texture/gui/key_full"),
 			(Texture)Resources.Load("Texture/gui/black")
 		};
-		
+
 		audioSource = new AudioSource[audioClips.Length];
 		for(int i = 0; i < audioSource.Length; i++){
 			audioSource[i] = gameObject.AddComponent<AudioSource>();
@@ -63,17 +63,17 @@ public class Player : MonoBehaviour
 	void Update()
 	{
 		RaycastHit hit;
-	    if(Physics.Raycast(transform.position + new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
-	    		grounded = (hit.distance <= halfPlayerWidth);
-	    }
-	    if(Physics.Raycast(transform.position - new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
-	        grounded = grounded ? grounded : (hit.distance <= halfPlayerWidth);
-	    }
-	    if(Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
-	        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
-	    }
-	    distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-	    rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
+    if(Physics.Raycast(transform.position + new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
+    		grounded = (hit.distance <= halfPlayerHeight);
+    }
+    if(Physics.Raycast(transform.position - new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
+        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
+    }
+    if(Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
+        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
+    }
+    distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+    rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
 
 	    //Reset Double Jump
 	    if(didDoubleJump && grounded){
@@ -160,12 +160,7 @@ public class Player : MonoBehaviour
 				GUI.DrawTexture(new Rect(w - (i * 50),10,50,50), guiTextures[2], ScaleMode.ScaleToFit, true);
 			}
 		}
-		if(win){
-			alphaFadeValue += Mathf.Clamp01(Time.deltaTime / 5);
-			GUI.color = new Color(0, 0, 0, alphaFadeValue);
-			GUI.DrawTexture( new Rect(0, 0, Screen.width, Screen.height ), guiTextures[4] );
-		}
-		if(lose){
+		if(win || lose){
 			alphaFadeValue += Mathf.Clamp01(Time.deltaTime / 5);
 			GUI.color = new Color(0, 0, 0, alphaFadeValue);
 			GUI.DrawTexture( new Rect(0, 0, Screen.width, Screen.height ), guiTextures[4] );

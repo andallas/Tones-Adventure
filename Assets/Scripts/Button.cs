@@ -47,7 +47,6 @@ public class Button
 			break;
 
 			case "reset_player":
-
 				player.Kill();
 			break;
 
