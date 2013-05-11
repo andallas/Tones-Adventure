@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
 	private int total = 4;
 	private int animSpeed = 10;
 	private float halfPlayerHeight;
-	private float halfPlayerWidth;
+	//private float halfPlayerWidth;
 	private int raycastDistance = 2;
 	private bool jump;
 	private bool canPhase = false;
@@ -33,13 +33,15 @@ public class Player : MonoBehaviour
 	private float alphaFadeValue = 0;
 	private bool invokedLevelChange = false;
 
+	public GameObject new_key;
+
 	public AudioClip[] audioClips;
 	private AudioSource[] audioSource;
 
 	void Start()
 	{
 		halfPlayerHeight = GetComponent<BoxCollider>().size.y / 2;
-		halfPlayerWidth = GetComponent<BoxCollider>().size.x / 2;
+		//halfPlayerWidth = GetComponent<BoxCollider>().size.x / 2;
 		guiTextures = new Texture[]{
 			(Texture)Resources.Load("Texture/gui/gear_life_empty"),
 			(Texture)Resources.Load("Texture/gui/gear_life_full"),
@@ -341,6 +343,7 @@ public class Player : MonoBehaviour
 		}
 		if(playSound){
 			PlayAudio(6);
+			Destroy(GameObject.Find("key_"+key));
 		}
 	}
 
@@ -359,8 +362,25 @@ public class Player : MonoBehaviour
 			playSound = keys[2];
 			keys[2] = false;
 		}
+
 		if(playSound){
 			PlayAudio(6);
+			if(key == "one"){
+				playSound = keys[0];
+				keys[0] = false;
+				Instantiate(new_key, new Vector3(112.0f, -76.0f, 0.0f), Quaternion.identity);
+			} else
+			if(key == "two"){
+				playSound = keys[1];
+				keys[1] = false;
+				Instantiate(new_key, new Vector3(107.0f, -72.0f, 0.0f), Quaternion.identity);
+			} else
+			if(key == "three"){
+				playSound = keys[2];
+				keys[2] = false;
+				Instantiate(new_key, new Vector3(102.0f, -76.0f, 0.0f), Quaternion.identity);
+			}
+			
 		} else {
 			PlayAudio(7);
 		}
@@ -370,6 +390,7 @@ public class Player : MonoBehaviour
 	public void WinConditionMet()
 	{
 		win = true;
+		Destroy(GameObject.Find("tones_trinket"));
 	}
 
 	private void LoadWinScreen()
