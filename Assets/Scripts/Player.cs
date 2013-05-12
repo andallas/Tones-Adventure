@@ -69,6 +69,7 @@ public class Player : MonoBehaviour
 		for(int i = 0; i < audioSource.Length; i++){
 			audioSource[i] = gameObject.AddComponent<AudioSource>();
 			audioSource[i].clip = audioClips[i];
+			audioSource[i].volume = 0.25f;
 		}
 
 		keys = new bool[3];
