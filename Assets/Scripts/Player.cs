@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
 	private int raycastDistance = 2;
 	private bool jump;
 	private bool canPhase = false;
-	private bool canDoubleJump = true;
+	private bool canDoubleJump = false;
 	private bool didDoubleJump = false;
 	private float distanceMoved;
 	private bool[] keys;
@@ -38,6 +38,9 @@ public class Player : MonoBehaviour
 
 	public AudioClip[] audioClips;
 	private AudioSource[] audioSource;
+	public AudioClip[] bgmClips;
+	private AudioSource[] bgm;
+	private int currentBgm = 0;
 
 	void Start()
 	{
@@ -57,6 +60,14 @@ public class Player : MonoBehaviour
 			audioSource[i].clip = audioClips[i];
 		}
 
+		bgm = new AudioSource[bgmClips.Length];
+		for(int i = 0; i < bgm.Length; i++){
+			bgm[i] = gameObject.AddComponent<AudioSource>();
+			bgm[i].clip = bgmClips[i];
+			bgm[i].volume = 0.5f;
+		}
+		bgm[currentBgm].Play();
+
 		keys = new bool[3];
 		keys[0] = false;
 		keys[1] = false;
@@ -65,6 +76,11 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
+		if(!bgm[currentBgm].isPlaying){
+			currentBgm = (currentBgm == bgm.Length) ? currentBgm = 0 : currentBgm + 1;
+			bgm[currentBgm].Play();
+		}
+
 		switch((int)Input.GetAxis("Horizontal"))
 		{
 			case 0:
@@ -412,21 +428,17 @@ public class Player : MonoBehaviour
 		if(playSound){
 			PlayAudio(6);
 			if(key == "one"){
-				playSound = keys[0];
-				keys[0] = false;
-				Instantiate(new_key, new Vector3(112.0f, -76.0f, 0.0f), Quaternion.identity);
+				Instantiate(new_key, new Vector3(111.5f, -76.0f, 0.0f), Quaternion.identity);
+				PlayAudio(0);
 			} else
 			if(key == "two"){
-				playSound = keys[1];
-				keys[1] = false;
-				Instantiate(new_key, new Vector3(107.0f, -72.0f, 0.0f), Quaternion.identity);
+				Instantiate(new_key, new Vector3(106.0f, -72.0f, 0.0f), Quaternion.identity);
+				PlayAudio(1);
 			} else
 			if(key == "three"){
-				playSound = keys[2];
-				keys[2] = false;
-				Instantiate(new_key, new Vector3(102.0f, -76.0f, 0.0f), Quaternion.identity);
+				Instantiate(new_key, new Vector3(100.5f, -76.0f, 0.0f), Quaternion.identity);
+				PlayAudio(2);
 			}
-			
 		} else {
 			PlayAudio(7);
 		}

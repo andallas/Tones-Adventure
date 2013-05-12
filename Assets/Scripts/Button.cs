@@ -74,6 +74,7 @@ public class Button
 			case "place_key":
 				if(player.PlaceKey(target)){
 					_objStatus = 1;
+					Debug.Log("KEY PLACED");
 				}
 			break;
 

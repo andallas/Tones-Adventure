@@ -64,6 +64,7 @@ public class Puzzle : MonoBehaviour {
 						((Player)GameObject.Find("Player").GetComponent(typeof(Player))).PlaySuccessTonesTwo();
 						platform[0].ToggleActive();
 						complete = true;
+						Debug.Log("PUZZLE WIN!");
 					}
 				break;
 
