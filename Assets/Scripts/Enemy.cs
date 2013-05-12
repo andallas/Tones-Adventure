@@ -11,6 +11,13 @@ public class Enemy : MonoBehaviour
 	private float halfWidth;
 	private int _health;
 
+	private int col = 8;
+	private int row = 4;
+	private int rowNum = 0;
+	private int colNum = 0;
+	private int total = 4;
+	private int animSpeed = 10;
+
 	enum States
 	{
 		Patrol,
@@ -36,13 +43,6 @@ public class Enemy : MonoBehaviour
 			switch(curState)
 			{
 				case (int)States.Patrol:
-					for(int i = 0; i < waypoints.Length; i++)
-					{
-						if(i == curWP)
-							Debug.DrawLine(transform.position, waypoints[curWP].transform.position, Color.green);
-						else
-							Debug.DrawLine(transform.position, waypoints[i].transform.position, Color.red);
-					}
 					Patrol();
 				break;
 				case (int)States.Dead:
@@ -52,7 +52,28 @@ public class Enemy : MonoBehaviour
 				default:
 				break;
 			}
+			SetSpriteAnimation(col, row, colNum, rowNum, total, animSpeed);
 		}
+	}
+
+	void SetSpriteAnimation(int colCount, int rowCount, int colNumber, int rowNumber, int totalCells, int _animSpeed)
+	{
+	    int index  = (int)(Time.time * _animSpeed);
+	    index = index % totalCells;
+	 
+	    float sizeX = 1.0f / colCount;
+	    float sizeY = 1.0f / rowCount;
+	    Vector2 size =  new Vector2(sizeX,sizeY);
+	 
+	    var uIndex = index % colCount;
+	    var vIndex = index / rowCount;
+	 
+	    float offsetX = (uIndex+colNumber) * size.x;
+	    float offsetY = (1.0f - size.y) - (vIndex + rowNumber) * size.y;
+	    Vector2 offset = new Vector2(offsetX,offsetY);
+	 
+	    renderer.material.SetTextureOffset ("_MainTex", offset);
+	    renderer.material.SetTextureScale  ("_MainTex", size);
 	}
 
 	private bool IsAlive()
@@ -65,11 +86,19 @@ public class Enemy : MonoBehaviour
 		float buffer = 0.5f;
 		if(transform.position.x + halfWidth < waypoints[curWP].transform.position.x)
 		{
+			// Move Right
 			rigidbody.MovePosition(rigidbody.position + new Vector3(speed * Time.deltaTime, 0, 0));
+			colNum = 0;
+			rowNum = 0;
+			total = 8;
 		}
 		if(transform.position.x - halfWidth> waypoints[curWP].transform.position.x)
 		{
+			// Move Left
 			rigidbody.MovePosition(rigidbody.position + new Vector3(-speed * Time.deltaTime, 0, 0));
+			colNum = 0;
+			rowNum = 0;
+			total = 8;
 		}
 		if((transform.position.x + halfWidth >= waypoints[curWP].transform.position.x - buffer && transform.position.x + halfWidth <= waypoints[curWP].transform.position.x + buffer) ||
 		   (transform.position.x - halfWidth >= waypoints[curWP].transform.position.x - buffer && transform.position.x - halfWidth <= waypoints[curWP].transform.position.x + buffer))

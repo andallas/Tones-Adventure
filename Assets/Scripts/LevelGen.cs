@@ -38,7 +38,7 @@ public class LevelGen : MonoBehaviour
 			for(int j = 0; j < 44; j++)
 			{
 				float a = (j % 2 == 0) ? 16.5f : 20.5f;
-				GameObject clone = (GameObject)Instantiate(brick, new Vector3((i * 8.0F) - a, (j * 2.8f) - 90, 4.0f), Quaternion.identity);
+				GameObject clone = (GameObject)Instantiate(brick, new Vector3((i * 8.0F) - a, (j * 2.88f) - 90, 4.0f), Quaternion.identity);
 				clone.transform.parent = transform;
 				clone.renderer.material = brick_material;
 			}
