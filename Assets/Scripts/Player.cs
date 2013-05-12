@@ -103,6 +103,7 @@ public class Player : MonoBehaviour
 			default:
 			break;
 		}
+		bool landed = grounded;
 		RaycastHit hit;
 	    if(Physics.Raycast(transform.position + new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
 	    		grounded = (hit.distance <= halfPlayerHeight);
@@ -298,6 +299,7 @@ public class Player : MonoBehaviour
 		rigidbody.AddForce(new Vector3(0,jumpSpeed,0));
 		colNum = 12;
 		rowNum = 0;
+		PlayAudio(9);
 	}
 	
 	bool IsAlive()
@@ -313,12 +315,15 @@ public class Player : MonoBehaviour
 		Invoke("invulnerableTimeout", 1.0f);
 		if(!IsAlive())
 		{
+			PlayAudio(12);
 			lives--;
 			Debug.Log("Lives: " + lives);
 			if(lives < 0)
 				lose = true;
 			else
 				Reset();
+		} else {
+			PlayAudio(11);
 		}
 	}
 
