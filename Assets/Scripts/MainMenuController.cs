@@ -34,7 +34,7 @@ public class MainMenuController : MonoBehaviour {
 		};
 		G_item = items[Random.Range(0,7)];
 		G_villain = villains[Random.Range(0,21)];
-		GameObject.Find("Objective").GetComponent<TextMesh>().text = "Tone needs to obtain her <color=green>"+G_item+"</color> which was stolen by <color=red>\n"+G_villain+"</color>, \nso she heads to the laboratory to find it.";
+		GameObject.Find("Objective").GetComponent<TextMesh>().text = "Tone needs to obtain her <color=#a59057>"+G_item+"</color> which was stolen by <color=#a59057>\n"+G_villain+"</color>, so she heads to the laboratory to find it.";
 	}
 	
 	void Update(){
