@@ -13,6 +13,8 @@ class BGM : MonoBehaviour
 	private bool loadSong = true;
 	private float BGMVolume = 0.15f;
 
+	private bool paused = false;
+
 	void Awake()
 	{
 		if (instance != null && instance != this) 
@@ -39,12 +41,32 @@ class BGM : MonoBehaviour
 
 	void Update()
 	{
-		if(!audioSource[curTrack].isPlaying)
+		if(GameController.PAUSED)
 		{
-			if(loadSong)
+			if(!paused)
 			{
-				loadSong = false;
-				Invoke("PlayNext", 2);
+				PauseSong();
+				paused = true;
+			}
+		}
+		else
+		{
+			if(paused)
+			{
+				PlaySong();
+				paused = false;
+			}
+		}
+
+		if(!paused)
+		{
+			if(!audioSource[curTrack].isPlaying)
+			{
+				if(loadSong)
+				{
+					loadSong = false;
+					Invoke("PlayNext", 2);
+				}
 			}
 		}
 	}
@@ -52,14 +74,24 @@ class BGM : MonoBehaviour
 	public void PlayNext()
 	{
 		curTrack = Random.Range(0, audioClips.Length);
-		Stop();
+		StopSong();
 		audioSource[curTrack].Play();
 		audioSource[curTrack].volume = BGMVolume;
 		loadSong = true;
 	}
 
-	public void Stop()
+	public void StopSong()
 	{
-		audio.Stop();
+		audioSource[curTrack].Stop();
+	}
+
+	public void PauseSong()
+	{
+		audioSource[curTrack].Pause();
+	}
+
+	public void PlaySong()
+	{
+		audioSource[curTrack].Play();
 	}
 }

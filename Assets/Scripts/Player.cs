@@ -79,6 +79,12 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
+		if(Input.GetButtonDown("Pause"))
+		{
+			GameController.PAUSED = !GameController.PAUSED;
+			Debug.Log(GameController.PAUSED);
+		}
+
 		if(curState == (int)States.Invulnerable)
 		{
 			stunColor = Color.Lerp(stunColor, Color.red, Time.deltaTime);
@@ -103,7 +109,6 @@ public class Player : MonoBehaviour
 			default:
 			break;
 		}
-		bool landed = grounded;
 		RaycastHit hit;
 	    if(Physics.Raycast(transform.position + new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
 	    		grounded = (hit.distance <= halfPlayerHeight);

@@ -9,22 +9,22 @@ public class LevelGen : MonoBehaviour
 	void Start()
 	{
 		GameObject trinket = (GameObject)GameObject.Find("tones_trinket");
-		if(MainMenuController.G_item == "top hat"){
+		if(GameController.ITEM == "top hat"){
 			trinket_material = (Material)Resources.Load("Texture/level/trinkets/Materials/tophat");
 		} else
-		if(MainMenuController.G_item == "telescope"){
+		if(GameController.ITEM == "telescope"){
 			trinket_material = (Material)Resources.Load("Texture/level/trinkets/Materials/scope");
 		} else
-		if(MainMenuController.G_item == "satchel"){
+		if(GameController.ITEM == "satchel"){
 			trinket_material = (Material)Resources.Load("Texture/level/trinkets/Materials/satchel");
 		} else
-		if(MainMenuController.G_item == "cane"){
+		if(GameController.ITEM == "cane"){
 			trinket_material = (Material)Resources.Load("Texture/level/trinkets/Materials/cane");
 		} else
-		if(MainMenuController.G_item == "corset"){
+		if(GameController.ITEM == "corset"){
 			trinket_material = (Material)Resources.Load("Texture/level/trinkets/Materials/corset");
 		} else
-		if(MainMenuController.G_item == "monocle"){
+		if(GameController.ITEM == "monocle"){
 			trinket_material = (Material)Resources.Load("Texture/level/trinkets/Materials/monocle");
 		} else { // pocket watch is default
 			trinket_material = (Material)Resources.Load("Texture/level/trinkets/Materials/pocket-watch");
