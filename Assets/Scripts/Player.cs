@@ -13,12 +13,13 @@ public class Player : MonoBehaviour
 	private float startY = 2.55f;
 	private Texture[] guiTextures;
 
-	private int col = 16;
+	private int col = 8;
 	private int row = 8;
 	private int rowNum = 0;
 	private int colNum = 0;
 	private int total = 4;
 	private int animSpeed = 10;
+	private bool faceRight = true;
 	private float halfPlayerHeight;
 	//private float halfPlayerWidth;
 	private int raycastDistance = 2;
@@ -64,18 +65,31 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
+		switch((int)Input.GetAxis("Horizontal"))
+		{
+			case 0:
+			break;
+			case 1:
+				faceRight = true;
+			break;
+			case -1:
+				faceRight = false;
+			break;
+			default:
+			break;
+		}
 		RaycastHit hit;
-    if(Physics.Raycast(transform.position + new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
-    		grounded = (hit.distance <= halfPlayerHeight);
-    }
-    if(Physics.Raycast(transform.position - new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
-        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
-    }
-    if(Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
-        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
-    }
-    distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-    rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
+	    if(Physics.Raycast(transform.position + new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
+	    		grounded = (hit.distance <= halfPlayerHeight);
+	    }
+	    if(Physics.Raycast(transform.position - new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
+	        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
+	    }
+	    if(Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
+	        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
+	    }
+	    distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+	    rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
 
 	    //Reset Double Jump
 	    if(didDoubleJump && grounded){
@@ -93,29 +107,61 @@ public class Player : MonoBehaviour
 			if(!grounded){
 				rigidbody.AddForce(new Vector3(0,-2500.0f,0) * Time.deltaTime);
 				if(rigidbody.velocity.y <= 0){
-					colNum = 0;
-					rowNum = 1;
+					// Falling
+					if(faceRight)
+					{
+						colNum = 0;
+						rowNum = 5;
+						total = 4;
+					}
+					else
+					{
+						colNum = 4;
+						rowNum = 5;
+						total = 4;
+					}
 				} else {
-					colNum = 12;
-					rowNum = 0;
+					// Jumping
+					if(faceRight)
+					{
+						colNum = 0;
+						rowNum = 4;
+						total = 4;
+					}
+					else
+					{
+						colNum = 4;
+						rowNum = 4;
+						total = 4;
+					}
 				}
 			} else {
 				switch((int)Input.GetAxis("Horizontal")){
 					case 0:
-						colNum = 0;
-						rowNum = 0;
+						if(faceRight)
+						{
+							colNum = 0;
+							rowNum = 2;
+							total = 6;
+						}
+						else
+						{
+							colNum = 0;
+							rowNum = 3;
+							total = 6;
+						}
 					break;
 					case -1:
-						colNum = 4;
-						rowNum = 0;
+						colNum = 0;
+						rowNum = 1;
+						total = 8;
 					break;
 					case 1:
-						colNum = 8;
-						rowNum = 0;
-					break;
-					default:
 						colNum = 0;
 						rowNum = 0;
+						total = 8;
+					break;
+					default:
 					break;
 				}
 			}
