@@ -28,27 +28,30 @@ public class Enemy : MonoBehaviour
 	
 	void Update()
 	{
-		if(!IsAlive())
-			curState = (int)States.Dead;
-
-		switch(curState)
+		if(!GameController.PAUSED)
 		{
-			case (int)States.Patrol:
-				for(int i = 0; i < waypoints.Length; i++)
-				{
-					if(i == curWP)
-						Debug.DrawLine(transform.position, waypoints[curWP].transform.position, Color.green);
-					else
-						Debug.DrawLine(transform.position, waypoints[i].transform.position, Color.red);
-				}
-				Patrol();
-			break;
-			case (int)States.Dead:
-				// Death code
-				Kill();
-			break;
-			default:
-			break;
+			if(!IsAlive())
+				curState = (int)States.Dead;
+
+			switch(curState)
+			{
+				case (int)States.Patrol:
+					for(int i = 0; i < waypoints.Length; i++)
+					{
+						if(i == curWP)
+							Debug.DrawLine(transform.position, waypoints[curWP].transform.position, Color.green);
+						else
+							Debug.DrawLine(transform.position, waypoints[i].transform.position, Color.red);
+					}
+					Patrol();
+				break;
+				case (int)States.Dead:
+					// Death code
+					Kill();
+				break;
+				default:
+				break;
+			}
 		}
 	}
 

@@ -11,7 +11,7 @@ class BGM : MonoBehaviour
 
 	private int curTrack;
 	private bool loadSong = true;
-	private float BGMVolume = 0.15f;
+	private float BGMVolume;
 
 	private bool paused = false;
 
@@ -41,6 +41,12 @@ class BGM : MonoBehaviour
 
 	void Update()
 	{
+		if(BGMVolume != GameController.BGM_VOLUME * GameController.MASTER_VOLUME)
+		{
+			BGMVolume = GameController.BGM_VOLUME * GameController.MASTER_VOLUME;
+			audioSource[curTrack].volume = BGMVolume;
+		}
+
 		if(GameController.PAUSED)
 		{
 			if(!paused)

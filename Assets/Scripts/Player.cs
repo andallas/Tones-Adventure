@@ -43,6 +43,9 @@ public class Player : MonoBehaviour
 	private bool stunned = false;
 	private Color stunColor;
 	private Color normColor;
+	private float SFXVolume;
+
+	private bool justLanded = true;
 
 	enum States
 	{
@@ -69,7 +72,7 @@ public class Player : MonoBehaviour
 		for(int i = 0; i < audioSource.Length; i++){
 			audioSource[i] = gameObject.AddComponent<AudioSource>();
 			audioSource[i].clip = audioClips[i];
-			audioSource[i].volume = 0.25f;
+			audioSource[i].volume = GameController.SFX_VOLUME * GameController.MASTER_VOLUME;
 		}
 
 		keys = new bool[3];
@@ -80,129 +83,158 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
+		if(SFXVolume != GameController.SFX_VOLUME * GameController.MASTER_VOLUME)
+		{
+			for(int i = 0; i < audioSource.Length; i++)
+			{
+				SFXVolume = GameController.SFX_VOLUME * GameController.MASTER_VOLUME;
+				audioSource[i].volume = SFXVolume;
+			}
+		}
+
 		if(Input.GetButtonDown("Pause"))
 		{
 			GameController.PAUSED = !GameController.PAUSED;
-			Debug.Log(GameController.PAUSED);
+
+			if(GameController.PAUSED)
+			{
+				Time.timeScale = 0.0f;
+				Time.fixedDeltaTime = 0.0f;
+			}
+			else
+			{
+				Time.timeScale = 1.0f;
+				Time.fixedDeltaTime = 0.02f;
+			}
 		}
 
-		if(curState == (int)States.Invulnerable)
+		if(!GameController.PAUSED)
 		{
-			stunColor = Color.Lerp(stunColor, Color.red, Time.deltaTime);
-			renderer.material.color = stunColor;
-		}
-		if(curState == (int)States.Normal)
-		{
-			stunColor = Color.Lerp(stunColor, normColor, Time.deltaTime);
-			renderer.material.color = stunColor;
-		}
+			if(curState == (int)States.Invulnerable)
+			{
+				stunColor = Color.Lerp(stunColor, Color.red, Time.deltaTime);
+				renderer.material.color = stunColor;
+			}
+			if(curState == (int)States.Normal)
+			{
+				stunColor = Color.Lerp(stunColor, normColor, Time.deltaTime);
+				renderer.material.color = stunColor;
+			}
 
-		switch((int)Input.GetAxis("Horizontal"))
-		{
-			case 0:
-			break;
-			case 1:
-				faceRight = true;
-			break;
-			case -1:
-				faceRight = false;
-			break;
-			default:
-			break;
-		}
-		RaycastHit hit;
-	    if(Physics.Raycast(transform.position + new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
-	    		grounded = (hit.distance <= halfPlayerHeight);
-	    }
-	    if(Physics.Raycast(transform.position - new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
-	        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
-	    }
-	    if(Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
-	        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
-	    }
+			switch((int)Input.GetAxis("Horizontal"))
+			{
+				case 0:
+				break;
+				case 1:
+					faceRight = true;
+				break;
+				case -1:
+					faceRight = false;
+				break;
+				default:
+				break;
+			}
+			RaycastHit hit;
+		    if(Physics.Raycast(transform.position + new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
+		    		grounded = (hit.distance <= halfPlayerHeight);
+		    }
+		    if(Physics.Raycast(transform.position - new Vector3(1.0f,0,0), -Vector3.up * raycastDistance, out hit)){
+		        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
+		    }
+		    if(Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
+		        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
+		    }
 
-	    //Reset Double Jump
-	    if(didDoubleJump && grounded){
-	    	didDoubleJump = false;
-	    }
+		    if(grounded)
+		    {
+		    	if(justLanded)
+		    		PlayAudio(12);
+	    		justLanded = false;
+		    }
+		    //Reset Double Jump
+		    if(didDoubleJump && grounded){
+		    	didDoubleJump = false;
+		    }
 
-	    if(!stunned)
-	    {
-	    	distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-	    	rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
+		    if(!stunned)
+		    {
+		    	distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+		    	rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
 
-			if(Input.GetButtonDown("Jump")){
-				if(grounded){
-					Jump();
-				} else
-				if(canDoubleJump && !didDoubleJump){
-					DoubleJump();
-				}
-			} else {
-				if(!grounded){
-					rigidbody.AddForce(new Vector3(0,-2500.0f,0) * Time.deltaTime);
-					if(rigidbody.velocity.y <= 0){
-						// Falling
-						if(faceRight)
-						{
-							colNum = 0;
-							rowNum = 5;
-							total = 4;
-						}
-						else
-						{
-							colNum = 4;
-							rowNum = 5;
-							total = 4;
-						}
-					} else {
-						// Jumping
-						if(faceRight)
-						{
-							colNum = 0;
-							rowNum = 4;
-							total = 4;
-						}
-						else
-						{
-							colNum = 4;
-							rowNum = 4;
-							total = 4;
-						}
+				if(Input.GetButtonDown("Jump")){
+					if(grounded){
+						justLanded = true;
+						Jump();
+					} else
+					if(canDoubleJump && !didDoubleJump){
+						DoubleJump();
 					}
 				} else {
-					switch((int)Input.GetAxis("Horizontal")){
-						case 0:
+					if(!grounded){
+						rigidbody.AddForce(new Vector3(0,-2500.0f,0) * Time.deltaTime);
+						if(rigidbody.velocity.y <= 0){
+							// Falling
 							if(faceRight)
 							{
 								colNum = 0;
-								rowNum = 2;
-								total = 6;
+								rowNum = 5;
+								total = 4;
 							}
 							else
 							{
-								colNum = 0;
-								rowNum = 3;
-								total = 6;
+								colNum = 4;
+								rowNum = 5;
+								total = 4;
 							}
-						break;
-						case -1:
-							colNum = 0;
-							rowNum = 1;
-							total = 8;
-						break;
-						case 1:
-							colNum = 0;
-							rowNum = 0;
-							total = 8;
-						break;
-						default:
-						break;
+						} else {
+							// Jumping
+							if(faceRight)
+							{
+								colNum = 0;
+								rowNum = 4;
+								total = 4;
+							}
+							else
+							{
+								colNum = 4;
+								rowNum = 4;
+								total = 4;
+							}
+						}
+					} else {
+						switch((int)Input.GetAxis("Horizontal")){
+							case 0:
+								if(faceRight)
+								{
+									colNum = 0;
+									rowNum = 2;
+									total = 6;
+								}
+								else
+								{
+									colNum = 0;
+									rowNum = 3;
+									total = 6;
+								}
+							break;
+							case -1:
+								colNum = 0;
+								rowNum = 1;
+								total = 8;
+							break;
+							case 1:
+								colNum = 0;
+								rowNum = 0;
+								total = 8;
+							break;
+							default:
+							break;
+						}
 					}
 				}
 			}
+			SetSpriteAnimation(col, row, colNum, rowNum, total, animSpeed);
 		}
-		SetSpriteAnimation(col, row, colNum, rowNum, total, animSpeed);
 
 		//Phasing
 		if(canPhase){
@@ -229,6 +261,25 @@ public class Player : MonoBehaviour
 
 	void OnGUI()
 	{
+		if(GameController.PAUSED)
+		{
+			float width = Screen.width / 2;
+			float height = Screen.height / 4;
+			GUI.Label(new Rect(width - 50, height - 50, 100, 20), "Master Volume");
+			GameController.MASTER_VOLUME = GUI.HorizontalSlider(new Rect(width - 50, height - 25, 100, 20), GameController.MASTER_VOLUME, 0.0F, 1.0F);
+			GUI.Label(new Rect(width + 75, height - 25, 20, 20), "" + GameController.MASTER_VOLUME);
+
+			GUI.Label(new Rect(width - 50, height, 100, 20), "BGM Volume");
+			GameController.BGM_VOLUME = GUI.HorizontalSlider(new Rect(width - 50, height + 25, 100, 20), GameController.BGM_VOLUME, 0.0F, 1.0F);
+			GUI.Label(new Rect(width + 75, height + 25, 20, 20), "" + GameController.BGM_VOLUME);
+
+			GUI.Label(new Rect(width - 50, height + 50, 100, 20), "SFX Volume");
+			GameController.SFX_VOLUME = GUI.HorizontalSlider(new Rect(width - 50, height + 75, 100, 20), GameController.SFX_VOLUME, 0.0F, 1.0F);
+			GUI.Label(new Rect(width + 75, height + 75, 20, 20), "" + GameController.SFX_VOLUME);
+
+			GUI.Label(new Rect(width - 75, height + 150, 150, 200),"Controls:\nLeft:   'A'  |  Left Arrow\nRight:  'D'  |  Right Arrow\nJump:   'Space'\nAction: 'LShift'\nPhase:  'X'\nPause:  'ESC'");
+		}
+
 		for(int i = 0; i < maxLife; i++){
 			if(i < life){
 				GUI.DrawTexture(new Rect(10 + (i * 40),10,50 + (i * 40),50), guiTextures[1], ScaleMode.ScaleToFit, true);
@@ -261,6 +312,7 @@ public class Player : MonoBehaviour
 				if(normal == Vector3.up)
 				{
 					collision.gameObject.SendMessage("DamageSelf", 1);
+					PlayAudio(13);
 				}
 				else
 				{
@@ -305,7 +357,7 @@ public class Player : MonoBehaviour
 		rigidbody.AddForce(new Vector3(0,jumpSpeed,0));
 		colNum = 12;
 		rowNum = 0;
-		PlayAudio(9);
+		PlayAudio(11);
 	}
 	
 	bool IsAlive()
@@ -321,7 +373,7 @@ public class Player : MonoBehaviour
 		Invoke("invulnerableTimeout", 1.0f);
 		if(!IsAlive())
 		{
-			PlayAudio(12);
+			PlayAudio(10);
 			lives--;
 			Debug.Log("Lives: " + lives);
 			if(lives < 0)
@@ -329,7 +381,7 @@ public class Player : MonoBehaviour
 			else
 				Reset();
 		} else {
-			PlayAudio(11);
+			PlayAudio(09);
 		}
 	}
 
@@ -347,17 +399,22 @@ public class Player : MonoBehaviour
 	public void Kill()
 	{
 		life -= life;
+		stunned = true;
 		curState = (int)States.Invulnerable;
 		Invoke("invulnerableTimeout", 1.0f);
 		if(!IsAlive())
 		{
+			PlayAudio(10);
 			lives--;
 			Debug.Log("Lives: " + lives);
 			if(lives < 0)
 				lose = true;
 			else
 				Reset();
-		}	}
+		} else {
+			PlayAudio(09);
+		}
+	}
 
 	public void Reset()
 	{

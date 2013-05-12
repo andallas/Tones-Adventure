@@ -16,29 +16,32 @@ public class SlidingPlatform : MonoBehaviour {
 	}
 	
 	void Update(){
-		if(isActive){
-			float moveDistance = direction * speed * Time.deltaTime;
-			distanceTraveled += Mathf.Abs(moveDistance);
+		if(!GameController.PAUSED)
+		{
+			if(isActive){
+				float moveDistance = direction * speed * Time.deltaTime;
+				distanceTraveled += Mathf.Abs(moveDistance);
 
-			if(elevator){
-				transform.Translate(0,moveDistance,0);
-				if(child != null){
-					Player player = (Player)child.GetComponent(typeof(Player));
-					player.transform.Translate(player.DistanceMoved(),moveDistance,0);
+				if(elevator){
+					transform.Translate(0,moveDistance,0);
+					if(child != null){
+						Player player = (Player)child.GetComponent(typeof(Player));
+						player.transform.Translate(player.DistanceMoved(),moveDistance,0);
+					}
+				} else {
+					transform.Translate(moveDistance,0,0);
+					if(child != null){
+						Player player = (Player)child.GetComponent(typeof(Player));
+						player.transform.Translate(moveDistance + player.DistanceMoved(),0,0);
+					}
 				}
-			} else {
-				transform.Translate(moveDistance,0,0);
-				if(child != null){
-					Player player = (Player)child.GetComponent(typeof(Player));
-					player.transform.Translate(moveDistance + player.DistanceMoved(),0,0);
-				}
-			}
 
-			if(distanceTraveled >= distanceToTravel){
-				direction = direction == 1 ? -1 : 1;
-				distanceTraveled = 0;
-				if(elevator && !forceStayActive){
-					isActive = false;
+				if(distanceTraveled >= distanceToTravel){
+					direction = direction == 1 ? -1 : 1;
+					distanceTraveled = 0;
+					if(elevator && !forceStayActive){
+						isActive = false;
+					}
 				}
 			}
 		}
