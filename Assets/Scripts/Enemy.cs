@@ -13,14 +13,13 @@ public class Enemy : MonoBehaviour
 
 	enum States
 	{
-		Idle,
-		Aggressive,
+		Patrol,
 		Dead
 	}
 
 	void Start()
 	{
-		curState = (int)States.Idle;
+		curState = (int)States.Patrol;
 		curWP = 0;
 		speed = 5.0f;
 		halfWidth = GetComponent<BoxCollider>().size.x / 2;
@@ -34,7 +33,7 @@ public class Enemy : MonoBehaviour
 
 		switch(curState)
 		{
-			case (int)States.Idle:
+			case (int)States.Patrol:
 				for(int i = 0; i < waypoints.Length; i++)
 				{
 					if(i == curWP)
@@ -43,9 +42,6 @@ public class Enemy : MonoBehaviour
 						Debug.DrawLine(transform.position, waypoints[i].transform.position, Color.red);
 				}
 				Patrol();
-			break;
-			case (int)States.Aggressive:
-				// Special attack code
 			break;
 			case (int)States.Dead:
 				// Death code

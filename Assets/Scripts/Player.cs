@@ -39,8 +39,22 @@ public class Player : MonoBehaviour
 	public AudioClip[] audioClips;
 	private AudioSource[] audioSource;
 
+	public int curState;
+	private bool stunned = false;
+	private Color stunColor;
+	private Color normColor;
+
+	enum States
+	{
+		Normal,
+		Invulnerable
+	}
+
 	void Start()
 	{
+		stunColor = renderer.material.color;
+		normColor = renderer.material.color;
+		curState = (int)States.Normal;
 		halfPlayerHeight = GetComponent<BoxCollider>().size.y / 2;
 		//halfPlayerWidth = GetComponent<BoxCollider>().size.x / 2;
 		guiTextures = new Texture[]{
@@ -65,6 +79,17 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
+		if(curState == (int)States.Invulnerable)
+		{
+			stunColor = Color.Lerp(stunColor, Color.red, Time.deltaTime);
+			renderer.material.color = stunColor;
+		}
+		if(curState == (int)States.Normal)
+		{
+			stunColor = Color.Lerp(stunColor, normColor, Time.deltaTime);
+			renderer.material.color = stunColor;
+		}
+
 		switch((int)Input.GetAxis("Horizontal"))
 		{
 			case 0:
@@ -88,81 +113,85 @@ public class Player : MonoBehaviour
 	    if(Physics.Raycast(transform.position, -Vector3.up * raycastDistance, out hit)) {
 	        grounded = grounded ? grounded : (hit.distance <= halfPlayerHeight);
 	    }
-	    distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
-	    rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
 
 	    //Reset Double Jump
 	    if(didDoubleJump && grounded){
 	    	didDoubleJump = false;
 	    }
 
-		if(Input.GetButtonDown("Jump")){
-			if(grounded){
-				Jump();
-			} else
-			if(canDoubleJump && !didDoubleJump){
-				DoubleJump();
-			}
-		} else {
-			if(!grounded){
-				rigidbody.AddForce(new Vector3(0,-2500.0f,0) * Time.deltaTime);
-				if(rigidbody.velocity.y <= 0){
-					// Falling
-					if(faceRight)
-					{
-						colNum = 0;
-						rowNum = 5;
-						total = 4;
-					}
-					else
-					{
-						colNum = 4;
-						rowNum = 5;
-						total = 4;
-					}
-				} else {
-					// Jumping
-					if(faceRight)
-					{
-						colNum = 0;
-						rowNum = 4;
-						total = 4;
-					}
-					else
-					{
-						colNum = 4;
-						rowNum = 4;
-						total = 4;
-					}
+	    if(!stunned)
+	    {
+	    	distanceMoved = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+	    	rigidbody.MovePosition(rigidbody.position + new Vector3(distanceMoved,0,0));
+
+			if(Input.GetButtonDown("Jump")){
+				if(grounded){
+					Jump();
+				} else
+				if(canDoubleJump && !didDoubleJump){
+					DoubleJump();
 				}
 			} else {
-				switch((int)Input.GetAxis("Horizontal")){
-					case 0:
+				if(!grounded){
+					rigidbody.AddForce(new Vector3(0,-2500.0f,0) * Time.deltaTime);
+					if(rigidbody.velocity.y <= 0){
+						// Falling
 						if(faceRight)
 						{
 							colNum = 0;
-							rowNum = 2;
-							total = 6;
+							rowNum = 5;
+							total = 4;
 						}
 						else
 						{
-							colNum = 0;
-							rowNum = 3;
-							total = 6;
+							colNum = 4;
+							rowNum = 5;
+							total = 4;
 						}
-					break;
-					case -1:
-						colNum = 0;
-						rowNum = 1;
-						total = 8;
-					break;
-					case 1:
-						colNum = 0;
-						rowNum = 0;
-						total = 8;
-					break;
-					default:
-					break;
+					} else {
+						// Jumping
+						if(faceRight)
+						{
+							colNum = 0;
+							rowNum = 4;
+							total = 4;
+						}
+						else
+						{
+							colNum = 4;
+							rowNum = 4;
+							total = 4;
+						}
+					}
+				} else {
+					switch((int)Input.GetAxis("Horizontal")){
+						case 0:
+							if(faceRight)
+							{
+								colNum = 0;
+								rowNum = 2;
+								total = 6;
+							}
+							else
+							{
+								colNum = 0;
+								rowNum = 3;
+								total = 6;
+							}
+						break;
+						case -1:
+							colNum = 0;
+							rowNum = 1;
+							total = 8;
+						break;
+						case 1:
+							colNum = 0;
+							rowNum = 0;
+							total = 8;
+						break;
+						default:
+						break;
+					}
 				}
 			}
 		}
@@ -221,15 +250,19 @@ public class Player : MonoBehaviour
 		{
 			if(collision.gameObject.tag == "Enemy")
 			{
-				if(contact.normal == Vector3.up)
+				Vector3 normal = new Vector3(Mathf.Round(contact.normal.x), Mathf.Round(contact.normal.y), Mathf.Round(contact.normal.z));
+				if(normal == Vector3.up)
 				{
 					collision.gameObject.SendMessage("DamageSelf", 1);
 				}
 				else
 				{
-					DamagePlayer();
+					if(curState == (int)States.Normal)
+					{
+						DamagePlayer();
+					}
+					rigidbody.AddForce(normal * 250);
 				}
-				Debug.DrawRay(contact.point, contact.normal, Color.red);
 			}
 		}
 	}
@@ -275,6 +308,9 @@ public class Player : MonoBehaviour
 	void DamagePlayer()
 	{
 		life--;
+		stunned = true;
+		curState = (int)States.Invulnerable;
+		Invoke("invulnerableTimeout", 1.0f);
 		if(!IsAlive())
 		{
 			lives--;
@@ -286,12 +322,31 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	private void invulnerableTimeout()
+	{
+		curState = (int)States.Normal;
+		unStun();
+	}
+
+	private void unStun()
+	{
+		stunned = false;
+	}
+
 	public void Kill()
 	{
-		DamagePlayer();
-		DamagePlayer();
-		DamagePlayer();
-	}
+		life -= life;
+		curState = (int)States.Invulnerable;
+		Invoke("invulnerableTimeout", 1.0f);
+		if(!IsAlive())
+		{
+			lives--;
+			Debug.Log("Lives: " + lives);
+			if(lives < 0)
+				lose = true;
+			else
+				Reset();
+		}	}
 
 	public void Reset()
 	{
@@ -328,6 +383,7 @@ public class Player : MonoBehaviour
 		}
 		canPhase = true;
 	}
+
 	public void EnableDoubleJump()
 	{
 		if(canDoubleJump == false){

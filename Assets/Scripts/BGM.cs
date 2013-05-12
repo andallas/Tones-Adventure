@@ -11,6 +11,7 @@ class BGM : MonoBehaviour
 
 	private int curTrack;
 	private bool loadSong = true;
+	private float BGMVolume = 0.15f;
 
 	void Awake()
 	{
@@ -53,7 +54,7 @@ class BGM : MonoBehaviour
 		curTrack = Random.Range(0, audioClips.Length);
 		Stop();
 		audioSource[curTrack].Play();
-		audioSource[curTrack].volume = 0.025f;
+		audioSource[curTrack].volume = BGMVolume;
 		loadSong = true;
 	}
 
