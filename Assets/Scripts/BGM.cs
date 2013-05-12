@@ -14,7 +14,15 @@ class BGM : MonoBehaviour
 
 	void Awake()
 	{
-		instance = this;
+		if (instance != null && instance != this) 
+		{
+			Destroy(instance.gameObject);
+			return;
+		}
+		else
+		{
+			instance = this;
+		}
 		DontDestroyOnLoad(gameObject);
 	}
 
@@ -25,7 +33,6 @@ class BGM : MonoBehaviour
 		{
 			audioSource[i] = gameObject.AddComponent<AudioSource>();
 			audioSource[i].clip = audioClips[i];
-			audioSource[i].volume = 0.25f;
 		}
 	}
 
@@ -44,7 +51,9 @@ class BGM : MonoBehaviour
 	public void PlayNext()
 	{
 		curTrack = Random.Range(0, audioClips.Length);
+		Stop();
 		audioSource[curTrack].Play();
+		audioSource[curTrack].volume = 0.025f;
 		loadSong = true;
 	}
 

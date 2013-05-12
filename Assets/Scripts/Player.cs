@@ -38,9 +38,6 @@ public class Player : MonoBehaviour
 
 	public AudioClip[] audioClips;
 	private AudioSource[] audioSource;
-	public AudioClip[] bgmClips;
-	private AudioSource[] bgm;
-	private int currentBgm = 0;
 
 	void Start()
 	{
@@ -60,14 +57,6 @@ public class Player : MonoBehaviour
 			audioSource[i].clip = audioClips[i];
 		}
 
-		bgm = new AudioSource[bgmClips.Length];
-		for(int i = 0; i < bgm.Length; i++){
-			bgm[i] = gameObject.AddComponent<AudioSource>();
-			bgm[i].clip = bgmClips[i];
-			bgm[i].volume = 0.5f;
-		}
-		bgm[currentBgm].Play();
-
 		keys = new bool[3];
 		keys[0] = false;
 		keys[1] = false;
@@ -76,11 +65,6 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
-		if(!bgm[currentBgm].isPlaying){
-			currentBgm = (currentBgm == bgm.Length) ? currentBgm = 0 : currentBgm + 1;
-			bgm[currentBgm].Play();
-		}
-
 		switch((int)Input.GetAxis("Horizontal"))
 		{
 			case 0:
