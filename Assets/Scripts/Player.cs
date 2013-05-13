@@ -149,7 +149,7 @@ public class Player : MonoBehaviour
 		    if(grounded)
 		    {
 		    	if(justLanded)
-		    		PlayAudio(12);
+		    		//PlayAudio(12);
 	    		justLanded = false;
 		    }
 		    //Reset Double Jump
@@ -246,16 +246,14 @@ public class Player : MonoBehaviour
 		if(win){
 			if(alphaFadeValue >= 1 && !invokedLevelChange){
 				invokedLevelChange = true;
-				Invoke("LoadWinScreen", 2.0f);
+				Invoke("LoadWinScreen", 1.0f);
 			}
 		}
 		//Lost
 		if(lose){
-			Debug.Log("Lose");
 			if(alphaFadeValue >= 1 && !invokedLevelChange){
-				Debug.Log("Losing");
 				invokedLevelChange = true;
-				Invoke("LoadLoseScreen", 2.0f);
+				Invoke("LoadLoseScreen", 1.0f);
 			}
 		}
 	}
