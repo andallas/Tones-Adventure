@@ -52,6 +52,10 @@ public class MainMenuController : MonoBehaviour {
 					audio.Play();
 					showControls = !showControls;
 				}
+				if(hit.transform.name == "Quit Text"){
+					audio.Play();
+					Invoke("QuitApplication", 0.4f);
+				}
 			}
 		}
 	}
@@ -80,5 +84,9 @@ public class MainMenuController : MonoBehaviour {
 
 	void LoadLevel(){
 		Application.LoadLevel("game_scene");
+	}
+
+	void QuitApplication(){
+		Application.Quit();
 	}
 }
