@@ -79,6 +79,6 @@ public class MainMenuController : MonoBehaviour {
 	}
 
 	void LoadLevel(){
-		Application.LoadLevel("shawn_game_scene");
+		Application.LoadLevel("game_scene");
 	}
 }
