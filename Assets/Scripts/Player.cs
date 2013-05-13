@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
 	private int colNum = 0;
 	private int total = 4;
 	private int animSpeed = 10;
+
 	private bool faceRight = true;
 	private float halfPlayerHeight;
 	//private float halfPlayerWidth;
