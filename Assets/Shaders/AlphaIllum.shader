@@ -1,50 +1,37 @@
-Shader "Custom/AlphaIllum"
-{
-	Properties
-	{
-		_Color ("Color", Color) = (1.0,1.0,1.0,1.0)
-		_MainTex ("Diffuse Texture", 2D) = "white" {}	
+Shader "Custom/Illum" {
+	Properties {
+		_Color ("Main Color", Color) = (1,1,1,1)
+		_MainTex ("Base (RGB) Trans (A)", 2D) = "white" {}
+		_Illum ("Illumin", 2D) = "white" {}
+		_EmissionPower ("Emissive Power", Range(0, 1)) = 0
 	}
-	SubShader
-	{
-		Pass
-		{
-			CGPROGRAM
 
-			//pragmas
-			#pragma vertex vert
-			#pragma fragment frag
+	SubShader {
+		Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
+		LOD 200
 
-			//user defined variables
-			uniform float4 _Color;
+		CGPROGRAM
+		#pragma surface surf Lambert alpha
 
-			//base input structs
-			struct vertexInput
-			{
-				float4 vertex : POSITION;
-			};
+		sampler2D _MainTex;
+		sampler2D _Illum;
+		fixed4 _Color;
+		float _EmissionPower;
 
-			struct vertexOutput
-			{
-				float4 pos : SV_POSITION;
-			};
+		struct Input {
+			float2 uv_MainTex;
+			float2 uv_Illum;
+		};
 
-			//vertex function
-			vertexOutput vert (vertexInput v)
-			{
-				vertexOutput o;
-				o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-				return o;
-			}
-
-			//fragment function
-			float4 frag(vertexOutput i) : Color
-			{
-				return _Color;
-			}
-
-			ENDCG
+		void surf (Input IN, inout SurfaceOutput o) {
+			fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+			fixed4 i = tex2D(_Illum, IN.uv_Illum) * _Color;
+			o.Albedo = c.rgb;
+			o.Emission = i.rgb * _EmissionPower;
+			o.Alpha = c.a;
 		}
+		ENDCG
 	}
-	Fallback "Diffuse"
+
+	Fallback "Transparent/VertexLit"
 }

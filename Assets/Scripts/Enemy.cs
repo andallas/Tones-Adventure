@@ -17,6 +17,8 @@ public class Enemy : MonoBehaviour
 	private int colNum = 0;
 	private int total = 4;
 	private int animSpeed = 10;
+	private float illumFade = 0.0f;
+	private bool rising = true;
 
 	enum States
 	{
@@ -52,11 +54,22 @@ public class Enemy : MonoBehaviour
 				default:
 				break;
 			}
-			SetSpriteAnimation(col, row, colNum, rowNum, total, animSpeed);
+
+			if(illumFade >= 1.0f)
+			{
+				rising = false;
+			}
+			else if(illumFade <= 0.0f)
+			{
+				rising = true;
+			}
+
+			illumFade = (rising) ? illumFade + Time.deltaTime : illumFade - Time.deltaTime;
+			SetSpriteAnimation(col, row, colNum, rowNum, total, animSpeed, illumFade);
 		}
 	}
 
-	void SetSpriteAnimation(int colCount, int rowCount, int colNumber, int rowNumber, int totalCells, int _animSpeed)
+	void SetSpriteAnimation(int colCount, int rowCount, int colNumber, int rowNumber, int totalCells, int _animSpeed, float _illumFade)
 	{
 	    int index  = (int)(Time.time * _animSpeed);
 	    index = index % totalCells;
@@ -74,6 +87,12 @@ public class Enemy : MonoBehaviour
 	 
 	    renderer.material.SetTextureOffset ("_MainTex", offset);
 	    renderer.material.SetTextureScale  ("_MainTex", size);
+
+	    renderer.material.SetTextureOffset ("_Illum", offset);
+	    renderer.material.SetTextureScale  ("_Illum", size);
+
+	    renderer.material.SetFloat("_EmissionPower", _illumFade);
+	    Debug.Log("EmissionPower: " + renderer.material.GetFloat("_EmissionPower"));
 	}
 
 	private bool IsAlive()
