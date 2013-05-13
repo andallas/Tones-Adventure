@@ -92,7 +92,6 @@ public class Enemy : MonoBehaviour
 	    renderer.material.SetTextureScale  ("_Illum", size);
 
 	    renderer.material.SetFloat("_EmissionPower", _illumFade);
-	    Debug.Log("EmissionPower: " + renderer.material.GetFloat("_EmissionPower"));
 	}
 
 	private bool IsAlive()

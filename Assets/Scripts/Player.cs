@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
 	private int colNum = 0;
 	private int total = 4;
 	private int animSpeed = 10;
+	private float illumFade = 1.0f;
 
 	private bool faceRight = true;
 	private float halfPlayerHeight;
@@ -234,7 +235,7 @@ public class Player : MonoBehaviour
 					}
 				}
 			}
-			SetSpriteAnimation(col, row, colNum, rowNum, total, animSpeed);
+			SetSpriteAnimation(col, row, colNum, rowNum, total, animSpeed, illumFade);
 		}
 
 		//Phasing
@@ -325,7 +326,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	void SetSpriteAnimation(int colCount, int rowCount, int colNumber, int rowNumber, int totalCells, int _animSpeed)
+	void SetSpriteAnimation(int colCount, int rowCount, int colNumber, int rowNumber, int totalCells, int _animSpeed, float _illumFade)
 	{
 	    int index  = (int)(Time.time * _animSpeed);
 	    index = index % totalCells;
@@ -343,6 +344,11 @@ public class Player : MonoBehaviour
 	 
 	    renderer.material.SetTextureOffset ("_MainTex", offset);
 	    renderer.material.SetTextureScale  ("_MainTex", size);
+
+	    renderer.material.SetTextureOffset ("_Illum", offset);
+	    renderer.material.SetTextureScale  ("_Illum", size);
+
+	    renderer.material.SetFloat("_EmissionPower", _illumFade);
 	}
 
 	void DoubleJump()
