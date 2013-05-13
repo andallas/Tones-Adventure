@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
 	private int _health;
 
 	private int col = 8;
-	private int row = 4;
+	private int row = 8;
 	private int rowNum = 0;
 	private int colNum = 0;
 	private int total = 4;
@@ -89,10 +89,10 @@ public class Enemy : MonoBehaviour
 			// Move Right
 			rigidbody.MovePosition(rigidbody.position + new Vector3(speed * Time.deltaTime, 0, 0));
 			colNum = 0;
-			rowNum = 0;
+			rowNum = 1;
 			total = 8;
 		}
-		if(transform.position.x - halfWidth> waypoints[curWP].transform.position.x)
+		else if(transform.position.x - halfWidth > waypoints[curWP].transform.position.x)
 		{
 			// Move Left
 			rigidbody.MovePosition(rigidbody.position + new Vector3(-speed * Time.deltaTime, 0, 0));
