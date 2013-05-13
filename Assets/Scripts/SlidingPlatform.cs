@@ -32,7 +32,7 @@ public class SlidingPlatform : MonoBehaviour {
 					transform.Translate(moveDistance,0,0);
 					if(child != null){
 						Player player = (Player)child.GetComponent(typeof(Player));
-						player.transform.Translate(moveDistance + player.DistanceMoved(),0,0);
+						player.transform.Translate(moveDistance + (player.DistanceMoved()/2),0,0);
 					}
 				}
 
