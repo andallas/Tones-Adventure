@@ -67,7 +67,8 @@ public class Player : MonoBehaviour
 			(Texture)Resources.Load("Texture/gui/gear_life_full"),
 			(Texture)Resources.Load("Texture/gui/key_blank"),
 			(Texture)Resources.Load("Texture/gui/key_full"),
-			(Texture)Resources.Load("Texture/gui/black")
+			(Texture)Resources.Load("Texture/gui/black"),
+			(Texture)Resources.Load("Texture/gui/tone_lives")
 		};
 
 		audioSource = new AudioSource[audioClips.Length];
@@ -277,7 +278,7 @@ public class Player : MonoBehaviour
 			GameController.SFX_VOLUME = GUI.HorizontalSlider(new Rect(width - 50, height + 75, 100, 20), GameController.SFX_VOLUME, 0.0F, 1.0F);
 			GUI.Label(new Rect(width + 75, height + 75, 20, 20), "" + GameController.SFX_VOLUME);
 
-			GUI.Label(new Rect(width - 75, height + 150, 150, 200),"Controls:\nLeft:   'A'  |  Left Arrow\nRight:  'D'  |  Right Arrow\nJump:   'Space'\nAction: 'LShift'\nPhase:  'X'\nPause:  'ESC'");
+			GUI.Label(new Rect(width - 75, height + 150, 400, 200),"Controls:\nLeft:   'A'  |  Left Arrow\nRight:  'D'  |  Right Arrow\nJump:   'Space'\nDouble Jump:     'Tap Space Twice Rapidly'\nAction: 'LShift'\nPhase:  'X'\nPause:  'P'");
 		}
 
 		for(int i = 0; i < maxLife; i++){
@@ -295,6 +296,10 @@ public class Player : MonoBehaviour
 				GUI.DrawTexture(new Rect(w - (i * 50),10,50,50), guiTextures[2], ScaleMode.ScaleToFit, true);
 			}
 		}
+		for(int i = 0; i < lives; i++){
+			GUI.DrawTexture(new Rect(w - (i * 50),Screen.height - 60,50,50), guiTextures[5], ScaleMode.ScaleToFit, true);
+		}
+
 		if(win || lose){
 			alphaFadeValue += Mathf.Clamp01(Time.deltaTime / 5);
 			GUI.color = new Color(0, 0, 0, alphaFadeValue);
@@ -380,7 +385,6 @@ public class Player : MonoBehaviour
 		{
 			PlayAudio(10);
 			lives--;
-			Debug.Log("Lives: " + lives);
 			if(lives < 0)
 				lose = true;
 			else
@@ -411,7 +415,6 @@ public class Player : MonoBehaviour
 		{
 			PlayAudio(10);
 			lives--;
-			Debug.Log("Lives: " + lives);
 			if(lives < 0)
 				lose = true;
 			else
@@ -444,7 +447,9 @@ public class Player : MonoBehaviour
 	public void PlayAudio(int clipNum)
 	{
 		if(clipNum > -1){
-			audioSource[clipNum].Play();
+			//audioSource[clipNum].Play();
+			SFX.Instance.Play(clipNum);
+			//BGM.Instance.StopSong();
 		}
 	}
 
@@ -576,7 +581,6 @@ public class Player : MonoBehaviour
 
 	private void LoadLoseScreen()
 	{
-		Debug.Log("Lost");
 		Application.LoadLevel("game_over");
 	}
 }
