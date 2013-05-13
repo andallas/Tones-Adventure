@@ -33,7 +33,7 @@ public class LevelGen : MonoBehaviour
 		trinket.renderer.material = trinket_material;
 		brick_material = (Material)Resources.Load("Texture/level/model_skin/Materials/brick");
 
-		for(int i = 0; i < 18; i++)
+		for(int i = 0; i < 21; i++)
 		{
 			for(int j = 0; j < 44; j++)
 			{

@@ -5,6 +5,7 @@ public class MainMenuController : MonoBehaviour {
 	private RaycastHit hit;
 	public string item;
 	public string villain;
+	private bool showControls = false;
 
 	void Start(){
 		//Random
@@ -36,7 +37,7 @@ public class MainMenuController : MonoBehaviour {
 		GameController.ITEM = item;
 		villain = villains[Random.Range(0,21)];
 		GameController.VILLAIN = villain;
-		GameObject.Find("Objective").GetComponent<TextMesh>().text = "Tone needs to obtain her <color=#a59057>"+item+"</color> which was stolen by <color=#a59057>\n"+villain+"</color>, so she heads to the laboratory to find it.";
+		GameObject.Find("Objective").GetComponent<TextMesh>().text = "Tone needs to obtain her <color=#a59057>"+item+"</color> which was \nstolen by <color=#a59057>"+villain+"</color>, \nso she heads to the laboratory to find it.";
 	}
 	
 	void Update(){
@@ -47,11 +48,37 @@ public class MainMenuController : MonoBehaviour {
 					audio.Play();
 					Invoke("LoadLevel", 0.4f);
 				}
+				if(hit.transform.name == "Control Text"){
+					audio.Play();
+					showControls = !showControls;
+				}
 			}
 		}
 	}
 
+	void OnGUI()
+	{
+		if(showControls)
+		{
+			float width = Screen.width / 8;
+			float height = 75;
+			GUI.Label(new Rect(width - 50, height - 50, 100, 20), "Master Volume");
+			GameController.MASTER_VOLUME = GUI.HorizontalSlider(new Rect(width - 50, height - 25, 100, 20), GameController.MASTER_VOLUME, 0.0F, 1.0F);
+			GUI.Label(new Rect(width + 75, height - 25, 20, 20), "" + GameController.MASTER_VOLUME);
+
+			GUI.Label(new Rect(width - 50, height, 100, 20), "BGM Volume");
+			GameController.BGM_VOLUME = GUI.HorizontalSlider(new Rect(width - 50, height + 25, 100, 20), GameController.BGM_VOLUME, 0.0F, 1.0F);
+			GUI.Label(new Rect(width + 75, height + 25, 20, 20), "" + GameController.BGM_VOLUME);
+
+			GUI.Label(new Rect(width - 50, height + 50, 100, 20), "SFX Volume");
+			GameController.SFX_VOLUME = GUI.HorizontalSlider(new Rect(width - 50, height + 75, 100, 20), GameController.SFX_VOLUME, 0.0F, 1.0F);
+			GUI.Label(new Rect(width + 75, height + 75, 20, 20), "" + GameController.SFX_VOLUME);
+
+			GUI.Label(new Rect(width - 75, height + 150, 400, 200),"Controls:\nLeft:   'A'  |  Left Arrow\nRight:  'D'  |  Right Arrow\nJump:   'Space'\nDouble Jump:     'Tap Space Twice Rapidly'\nAction: 'LShift'\nPhase:  'X'\nPause:  'ESC'");
+		}
+	}
+
 	void LoadLevel(){
-		Application.LoadLevel("game_scene");
+		Application.LoadLevel("shawn_game_scene");
 	}
 }
