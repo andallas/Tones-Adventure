@@ -149,7 +149,7 @@ public class Player : MonoBehaviour
 		    if(grounded)
 		    {
 		    	if(justLanded)
-		    		PlayAudio(12);
+		    		//PlayAudio(12);
 	    		justLanded = false;
 		    }
 		    //Reset Double Jump
