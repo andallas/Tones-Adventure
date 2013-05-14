@@ -9,6 +9,8 @@ public class Button
 	private int _objStatus = 0;
 	private string target;
 	private int soundClipNum;
+	private bool led = false;
+	public bool LED{get{return led;}set{led = value;}}
 
 	public Button()
 	{
@@ -26,10 +28,16 @@ public class Button
 
 	public void Update()
 	{
+		if(action == "puzzle_one" || action == "puzzle_two" || action == "place_key" || action == "move_verticle_platorm")
+		{
+			LED = true;
+		}
+
 		if(toggled)
 		{
 			Action();
 		}
+
 		if(!canToggle)
 		{
 			toggled = false;

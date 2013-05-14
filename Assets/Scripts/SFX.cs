@@ -15,7 +15,6 @@ class SFX : MonoBehaviour
 	{
 		if (sfx_instance != null && sfx_instance != this) {
 			Destroy(sfx_instance.gameObject);
-			return;
 		} else {
 			sfx_instance = this;
 		}

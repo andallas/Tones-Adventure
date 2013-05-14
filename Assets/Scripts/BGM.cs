@@ -20,7 +20,6 @@ class BGM : MonoBehaviour
 		if (instance != null && instance != this) 
 		{
 			Destroy(instance.gameObject);
-			return;
 		}
 		else
 		{

@@ -83,6 +83,7 @@ public class Puzzle : MonoBehaviour {
 	  }
 	  for(int i = 0; i < btn.Length; i++){
 	    btn[i].ButtonStatus(0);
+	    btn[i].ToggleButton(false);
 	  }
 	}
 }

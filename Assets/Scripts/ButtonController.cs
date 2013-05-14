@@ -4,15 +4,16 @@ using System.Collections;
 public class ButtonController : MonoBehaviour
 {
 	private Button button;
-	private bool inZone;
-	private bool didToggleOnEnter;
-	public string action;
-	public bool toggleable;
-	public bool toggleOnEnter;
-	public int clipNum;
-	public string target;
+	private bool inZone = false;
+	private bool didToggleOnEnter = false;
+	public string action = "default";
+	public bool toggleable = true;
+	public bool toggleOnEnter = false;
+	public int clipNum = 0;
+	public string target = "default";
+	private float emissionPower = 0.0f;
 
-	void Start()
+	void Awake()
 	{
 		button = new Button(toggleable, action, target, clipNum);
 		inZone = false;
@@ -31,6 +32,22 @@ public class ButtonController : MonoBehaviour
 				if(Input.GetButtonDown("Action")){
 					button.toggled = !button.toggled;
 				}
+			}
+		}
+		if(button.LED)
+		{
+			if(button.toggled)
+			{
+				emissionPower = 1.0f;
+			}
+			else
+			{
+				emissionPower = 0.0f;
+			}
+			if(transform.parent.renderer)
+			{
+				if(emissionPower != transform.parent.renderer.material.GetFloat("_EmissionPower"))
+					transform.parent.renderer.material.SetFloat("_EmissionPower", emissionPower);
 			}
 		}
 		button.Update();
@@ -56,6 +73,11 @@ public class ButtonController : MonoBehaviour
 	public int ButtonStatus()
 	{
 		return button.objStatus;
+	}
+
+	public void ToggleButton(bool status)
+	{
+		button.toggled = status;
 	}
 
 	public void ButtonStatus(int status)
