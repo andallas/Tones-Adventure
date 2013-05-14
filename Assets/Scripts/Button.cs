@@ -85,6 +85,10 @@ public class Button
 				player.WinConditionMet();
 			break;
 
+			case "show_hint":
+				player.ShowHint(target);
+			break;
+
 			default:
 				Debug.LogError("No action specified");
 			break;

@@ -9,7 +9,7 @@ class BGM : MonoBehaviour
 	public AudioClip[] audioClips;
 	private AudioSource[] audioSource;
 
-	private int curTrack = 2;
+	private int curTrack = 1;
 	private bool loadSong = true;
 	private float BGMVolume;
 
@@ -37,6 +37,7 @@ class BGM : MonoBehaviour
 			audioSource[i] = gameObject.AddComponent<AudioSource>();
 			audioSource[i].clip = audioClips[i];
 		}
+		audioSource[curTrack].Play();
 	}
 
 	void Update()

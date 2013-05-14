@@ -47,8 +47,10 @@ public class Player : MonoBehaviour
 	private Color normColor;
 	private float SFXVolume;
 	private float Gamma;
-
 	private bool justLanded = true;
+
+	private string hintNum = "two";
+	private float hintTimer = 14.0f;
 
 	enum States
 	{
@@ -89,6 +91,8 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
+		hintTimer = hintTimer > 0 ? hintTimer - Time.deltaTime : 0;
+
 		if(GameController.GAMMA.r != Gamma)
 		{
 			Color ambient = new Color(Gamma, Gamma, Gamma, 1.0f);
@@ -273,10 +277,11 @@ public class Player : MonoBehaviour
 
 	void OnGUI()
 	{
+		float width = Screen.width / 2;
+		float height = Screen.height / 4;
+
 		if(GameController.PAUSED)
 		{
-			float width = Screen.width / 2;
-			float height = Screen.height / 4;
 			GUI.Label(new Rect(width - 50, height - 50, 100, 20), "Master Volume");
 			GameController.MASTER_VOLUME = GUI.HorizontalSlider(new Rect(width - 50, height - 25, 100, 20), GameController.MASTER_VOLUME, 0.0F, 1.0F);
 			GUI.Label(new Rect(width + 75, height - 25, 20, 20), "" + GameController.MASTER_VOLUME);
@@ -314,9 +319,33 @@ public class Player : MonoBehaviour
 		for(int i = 0; i < lives; i++){
 			GUI.DrawTexture(new Rect(w - (i * 50),Screen.height - 60,50,50), guiTextures[5], ScaleMode.ScaleToFit, true);
 		}
-
+		if(hintTimer > 0){
+			switch(hintNum){
+				case "one":
+					GUI.Label(new Rect(width - 150, height, 300, 200),"<color=#a59057>Tone:</color> Last I was here I solved this riddle on the <color=#a59057>whiteboard</color>. I need to sing into the microphones in a specific order. <color=#a59057>[L-SHIFT]</color> while standing in front of a microphone to sing into it. <color=#a59057>Listen</color> for Tones voice.");
+				break;
+				case "two":
+					GUI.Label(new Rect(width - 150, height, 300, 200),"<color=#a59057>Tone:</color> It's dark! I can hit <color=#a59057>[P]</color> to adjust Gamma settings.");
+				break;
+				case "three":
+					GUI.Label(new Rect(width - 150, height, 300, 200),"<color=#a59057>Tone:</color> That <color=#a59057>whiteboard</color>, I almost solved that riddle last time I was here.");
+				break;
+				case "four":
+					GUI.Label(new Rect(width - 150, height, 300, 200),"<color=#a59057>Tone:</color> I remember this riddle. I can't remember where, but I wrote the answer on a <color=#a59057>whiteboard</color> somewhere in the lab...");
+				break;
+				case "five":
+					GUI.Label(new Rect(width - 150, height, 300, 200),"<color=#a59057>Tone:</color> My golem powers have increased. I can <color=#a59057>double jump</color> by pressing <color=#a59057>[SPACE]</color> rapidly.");
+				break;
+				case "six":
+					GUI.Label(new Rect(width - 150, height, 300, 200),"<color=#a59057>Tone:</color> My golem powers have increased. I can <color=#a59057>phase</color> through <color=#c652e7>purple walls</color> by holding down <color=#a59057>[X]</color>.");
+				break;
+				case "seven":
+					GUI.Label(new Rect(width - 150, height, 300, 200),"<color=#a59057>Tone:</color> Finally this golem can rest. Devyn... Please come back soon...");
+				break;
+			}
+		}
 		if(win || lose){
-			alphaFadeValue += Mathf.Clamp01(Time.deltaTime / 5);
+			alphaFadeValue += Mathf.Clamp01(Time.deltaTime / 10);
 			GUI.color = new Color(0, 0, 0, alphaFadeValue);
 			GUI.DrawTexture( new Rect(0, 0, Screen.width, Screen.height ), guiTextures[4] );
 		}
@@ -472,6 +501,7 @@ public class Player : MonoBehaviour
 	{
 		if(canPhase == false){
 			PlaySuccessTones();
+			ShowHint("six");
 			Destroy(GameObject.Find("Phase_Powerup"));
 		}
 		canPhase = true;
@@ -481,6 +511,7 @@ public class Player : MonoBehaviour
 	{
 		if(canDoubleJump == false){
 			PlaySuccessTones();
+			ShowHint("five");
 			Destroy(GameObject.Find("Double_Jump_Powerup"));
 		}
 		canDoubleJump = true;
@@ -578,9 +609,16 @@ public class Player : MonoBehaviour
 		return playSound;
 	}
 
+	public void ShowHint(string i)
+	{
+		hintNum = i;
+		hintTimer = 12.0f;
+	}
+
 	public void WinConditionMet()
 	{
 		win = true;
+		ShowHint("seven");
 		Destroy(GameObject.Find("tones_trinket"));
 	}
 
