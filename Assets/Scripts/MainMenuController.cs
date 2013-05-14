@@ -6,8 +6,10 @@ public class MainMenuController : MonoBehaviour {
 	public string item;
 	public string villain;
 	private bool showControls = false;
+	private float Gamma;
 
 	void Start(){
+		Gamma = GameController.GAMMA.r;
 		//Random
 		string[] items = new string[]{"pocket watch", "monocle", "corset", "cane", "satchel", "telescope", "top hat"};
 		string[] villains = new string[]{
@@ -41,6 +43,13 @@ public class MainMenuController : MonoBehaviour {
 	}
 	
 	void Update(){
+		if(GameController.GAMMA.r != Gamma)
+		{
+			Color ambient = new Color(Gamma, Gamma, Gamma, 1.0f);
+			GameController.GAMMA = ambient;
+			if(RenderSettings.ambientLight != GameController.GAMMA)
+				RenderSettings.ambientLight = GameController.GAMMA;
+		}
 		if(Input.GetMouseButtonDown(0)){
 			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if(Physics.Raycast(ray, out hit)){
@@ -77,6 +86,10 @@ public class MainMenuController : MonoBehaviour {
 			GUI.Label(new Rect(width - 50, height + 50, 100, 20), "SFX Volume");
 			GameController.SFX_VOLUME = GUI.HorizontalSlider(new Rect(width - 50, height + 75, 100, 20), GameController.SFX_VOLUME, 0.0F, 1.0F);
 			GUI.Label(new Rect(width + 75, height + 75, 20, 20), "" + GameController.SFX_VOLUME);
+
+			GUI.Label(new Rect(width - 50, height + 100, 100, 20), "Gamma");
+			Gamma = GUI.HorizontalSlider(new Rect(width - 50, height + 125, 100, 20), Gamma, 0.0F, 0.2F);
+			GUI.Label(new Rect(width + 75, height + 125, 20, 20), "" + Gamma);
 
 			GUI.Label(new Rect(width - 75, height + 150, 400, 200),"Controls:\nLeft:   'A'  |  Left Arrow\nRight:  'D'  |  Right Arrow\nJump:   'Space'\nDouble Jump:     'Tap Space Twice Rapidly'\nAction: 'LShift'\nPhase:  'X'\nPause:  'P'");
 		}

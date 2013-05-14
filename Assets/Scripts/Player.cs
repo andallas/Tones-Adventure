@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
 	private Color stunColor;
 	private Color normColor;
 	private float SFXVolume;
+	private float Gamma;
 
 	private bool justLanded = true;
 
@@ -57,6 +58,8 @@ public class Player : MonoBehaviour
 
 	void Start()
 	{
+		Gamma = GameController.GAMMA.r;
+		RenderSettings.ambientLight = GameController.GAMMA;
 		stunColor = renderer.material.color;
 		normColor = renderer.material.color;
 		curState = (int)States.Normal;
@@ -86,6 +89,14 @@ public class Player : MonoBehaviour
 
 	void Update()
 	{
+		if(GameController.GAMMA.r != Gamma)
+		{
+			Color ambient = new Color(Gamma, Gamma, Gamma, 1.0f);
+			GameController.GAMMA = ambient;
+			if(RenderSettings.ambientLight != GameController.GAMMA)
+				RenderSettings.ambientLight = GameController.GAMMA;
+		}
+
 		if(SFXVolume != GameController.SFX_VOLUME * GameController.MASTER_VOLUME)
 		{
 			for(int i = 0; i < audioSource.Length; i++)
@@ -278,7 +289,11 @@ public class Player : MonoBehaviour
 			GameController.SFX_VOLUME = GUI.HorizontalSlider(new Rect(width - 50, height + 75, 100, 20), GameController.SFX_VOLUME, 0.0F, 1.0F);
 			GUI.Label(new Rect(width + 75, height + 75, 20, 20), "" + GameController.SFX_VOLUME);
 
-			GUI.Label(new Rect(width - 75, height + 150, 400, 200),"Controls:\nLeft:   'A'  |  Left Arrow\nRight:  'D'  |  Right Arrow\nJump:   'Space'\nDouble Jump:     'Tap Space Twice Rapidly'\nAction: 'LShift'\nPhase:  'X'\nPause:  'P'");
+			GUI.Label(new Rect(width - 50, height + 100, 100, 20), "Gamma");
+			Gamma = GUI.HorizontalSlider(new Rect(width - 50, height + 125, 100, 20), Gamma, 0.0F, 0.2F);
+			GUI.Label(new Rect(width + 75, height + 125, 20, 20), "" + Gamma);
+
+			GUI.Label(new Rect(width - 75, height + 250, 400, 200),"Controls:\nLeft:   'A'  |  Left Arrow\nRight:  'D'  |  Right Arrow\nJump:   'Space'\nDouble Jump:     'Tap Space Twice Rapidly'\nAction: 'LShift'\nPhase:  'X'\nPause:  'P'");
 		}
 
 		for(int i = 0; i < maxLife; i++){

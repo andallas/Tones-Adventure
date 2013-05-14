@@ -9,7 +9,7 @@ class BGM : MonoBehaviour
 	public AudioClip[] audioClips;
 	private AudioSource[] audioSource;
 
-	private int curTrack;
+	private int curTrack = 2;
 	private bool loadSong = true;
 	private float BGMVolume;
 
