@@ -52,6 +52,8 @@ public class Player : MonoBehaviour
 	private string hintNum = "two";
 	private float hintTimer = 14.0f;
 
+	private float winTime = 0.0f;
+
 	enum States
 	{
 		Normal,
@@ -264,6 +266,14 @@ public class Player : MonoBehaviour
 			if(alphaFadeValue >= 1 && !invokedLevelChange){
 				invokedLevelChange = true;
 				Invoke("LoadWinScreen", 1.0f);
+			}
+		}
+		else
+		{
+			if(!GameController.PAUSED)
+			{
+				winTime += Time.time;
+				Debug.Log("Time: " + winTime);
 			}
 		}
 		//Lost
